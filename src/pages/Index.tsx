@@ -60,8 +60,30 @@ const Index = () => {
 
     setIsSubmitting(true);
 
-    // Simulate form submission (replace with actual backend call)
-    setTimeout(() => {
+    try {
+      console.log("Submitting contact form...");
+      
+      // Call the edge function to send email
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/send-contact-email`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to send email");
+      }
+
+      console.log("Email sent successfully:", data);
+      
       toast({
         title: "Order Received! ✅",
         description: "Thank you for your order! I'll contact you shortly.",
@@ -76,9 +98,16 @@ const Index = () => {
         budget: "",
         message: "",
       });
-      
+    } catch (error: any) {
+      console.error("Error submitting form:", error);
+      toast({
+        title: "Submission Failed",
+        description: error.message || "Failed to send your message. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
       setIsSubmitting(false);
-    }, 1500);
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
