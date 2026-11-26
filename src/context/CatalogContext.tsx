@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { products as fallbackProducts, type Product } from "@/data/products";
+import { isRemoteCatalogImage } from "@/data/catalogImages";
 import { supabase } from "@/integrations/supabase/client";
 
 type CatalogRow = {
@@ -43,6 +44,7 @@ function mapRow(row: CatalogRow): Product {
     descriptionRu: row.description_ru,
     descriptionEn: row.description_en,
     category: row.category,
+    image: isRemoteCatalogImage(row.image_key) ? row.image_key : (fallback?.image ?? ""),
     price: Number(row.price),
     originalPrice: row.original_price === null ? undefined : Number(row.original_price),
     badge: row.badge ?? undefined,
@@ -71,7 +73,7 @@ function toRow(product: Product): CatalogRow {
     availability_ru: product.availabilityRu ?? null,
     availability_en: product.availabilityEn ?? null,
     sort_order: product.sortOrder ?? fallbackProducts.findIndex(candidate => candidate.slug === product.slug),
-    image_key: product.slug,
+    image_key: isRemoteCatalogImage(product.image) ? product.image : product.slug,
   };
 }
 

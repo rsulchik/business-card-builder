@@ -2,8 +2,10 @@ import type { Product } from "./products";
 import skincareImage from "@/assets/products/radiance-renewal-serum.jpg";
 import makeupImage from "@/assets/products/silk-veil-lip-tint.jpg";
 import setsImage from "@/assets/products/daily-dew-skin-set.jpg";
+import { getCatalogImage } from "./catalogImages";
 
-// Imported from косметика Р.xlsx. Product photos remain category placeholders until verified source images are available.
+// Imported from косметика Р.xlsx. Verified VEMONTES matches use their source images;
+// unmatched rows keep the category placeholder until a product match is confirmed.
 export const importedCatalog: Product[] = [
   { slug: "imported-axcne-ampoule-kit-1",
     name: "AXCNE AMPOULE KIT",
@@ -1221,3 +1223,7 @@ export const importedCatalog: Product[] = [
     descriptionEn: "HUBIS. Позиция из каталога HUBIS.",
     sortOrder: 144 },
 ];
+
+for (const product of importedCatalog) {
+  product.image = getCatalogImage(product.name, product.image);
+}
