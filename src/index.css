@@ -2,112 +2,81 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
-
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 210 11% 15%;
+    --background: 40 33% 97%;
+    --foreground: 345 25% 14%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 210 11% 15%;
+    --card: 40 33% 98%;
+    --card-foreground: 345 25% 14%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 11% 15%;
+    --popover: 40 33% 98%;
+    --popover-foreground: 345 25% 14%;
 
-    --primary: 248 53% 58%;
-    --primary-foreground: 0 0% 100%;
+    --primary: 345 38% 20%;
+    --primary-foreground: 40 33% 97%;
 
-    --secondary: 248 53% 70%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 28 30% 91%;
+    --secondary-foreground: 345 25% 14%;
 
-    --muted: 220 14% 96%;
-    --muted-foreground: 220 9% 46%;
+    --muted: 30 18% 92%;
+    --muted-foreground: 345 8% 42%;
 
-    --accent: 263 70% 50%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 346 40% 36%;
+    --accent-foreground: 40 33% 97%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 62% 42%;
+    --destructive-foreground: 40 33% 97%;
 
-    --border: 220 13% 91%;
-    --input: 220 13% 91%;
-    --ring: 248 53% 58%;
+    --border: 30 17% 82%;
+    --input: 30 17% 82%;
+    --ring: 346 40% 36%;
 
-    --radius: 0.625rem;
-    
-    /* Custom gradient colors */
-    --gradient-start: 248 53% 58%;
-    --gradient-end: 263 70% 50%;
-    
-    /* Service card accent */
-    --service-accent: 248 53% 58%;
-    
-    /* Shadows */
-    --shadow-card: 0 10px 30px rgb(0 0 0 / 0.15);
-    --shadow-hover: 0 15px 40px rgb(0 0 0 / 0.2);
+    --radius: 0rem;
+    --warm-bg: 30 26% 92%;
+    --gradient-hero: linear-gradient(90deg, hsl(345 30% 10% / 0.72) 0%, hsl(345 25% 14% / 0.24) 52%, hsl(345 25% 14% / 0.04) 100%);
+    --shadow-soft: 0 22px 60px -32px hsl(345 25% 14% / 0.34);
 
-    --sidebar-background: 0 0% 98%;
+    --sidebar-background: 40 33% 97%;
+    --sidebar-foreground: 345 25% 14%;
+    --sidebar-primary: 345 38% 20%;
+    --sidebar-primary-foreground: 40 33% 97%;
+    --sidebar-accent: 28 30% 91%;
+    --sidebar-accent-foreground: 345 25% 14%;
+    --sidebar-border: 30 17% 82%;
+    --sidebar-ring: 346 40% 36%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --google-button-background: #FFFFFF;
+    --google-button-border: #747775;
+    --google-button-foreground: #1F1F1F;
   }
 
   .dark {
-    --background: 224 71% 4%;
-    --foreground: 210 40% 98%;
-
-    --card: 224 71% 4%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 224 71% 4%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 248 53% 58%;
-    --primary-foreground: 0 0% 100%;
-
-    --secondary: 248 53% 70%;
-    --secondary-foreground: 0 0% 100%;
-
-    --muted: 223 47% 11%;
-    --muted-foreground: 215 20% 65%;
-
-    --accent: 263 70% 50%;
-    --accent-foreground: 0 0% 100%;
-
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 223 47% 11%;
-    --input: 223 47% 11%;
-    --ring: 248 53% 58%;
-    
-    --gradient-start: 248 53% 58%;
-    --gradient-end: 263 70% 50%;
-    --service-accent: 248 53% 58%;
-    --shadow-card: 0 10px 30px rgb(0 0 0 / 0.3);
-    --shadow-hover: 0 15px 40px rgb(0 0 0 / 0.4);
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --background: 345 20% 9%;
+    --foreground: 40 33% 94%;
+    --card: 345 20% 11%;
+    --card-foreground: 40 33% 94%;
+    --popover: 345 20% 11%;
+    --popover-foreground: 40 33% 94%;
+    --primary: 40 33% 94%;
+    --primary-foreground: 345 25% 14%;
+    --secondary: 345 16% 16%;
+    --secondary-foreground: 40 33% 94%;
+    --muted: 345 16% 16%;
+    --muted-foreground: 30 12% 68%;
+    --accent: 346 32% 62%;
+    --accent-foreground: 345 25% 14%;
+    --destructive: 0 50% 45%;
+    --destructive-foreground: 40 33% 97%;
+    --border: 345 12% 24%;
+    --input: 345 12% 24%;
+    --ring: 346 32% 62%;
+    --warm-bg: 345 16% 14%;
+    --gradient-hero: linear-gradient(90deg, hsl(345 30% 6% / 0.82) 0%, hsl(345 25% 8% / 0.32) 52%, hsl(345 25% 8% / 0.08) 100%);
+    --shadow-soft: 0 22px 60px -32px hsl(345 30% 4% / 0.7);
+    --google-button-background: #131314;
+    --google-button-border: #8E918F;
+    --google-button-foreground: #E3E3E3;
   }
 }
 
@@ -116,21 +85,53 @@ All colors MUST be HSL.
     @apply border-border;
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply bg-gradient-to-br from-[hsl(var(--gradient-start))] to-[hsl(var(--gradient-end))] text-foreground min-h-screen;
+    @apply bg-background font-sans text-foreground antialiased;
+  }
+
+  ::selection {
+    @apply bg-accent text-accent-foreground;
+  }
+
+  button,
+  a,
+  input,
+  select,
+  textarea,
+  summary {
+    @apply focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+
+  button,
+  summary {
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
 @layer utilities {
-  .gradient-text {
-    @apply bg-gradient-to-r from-[hsl(var(--gradient-start))] to-[hsl(var(--gradient-end))] bg-clip-text text-transparent;
+  .text-balance {
+    text-wrap: balance;
   }
-  
-  .card-shadow {
-    box-shadow: var(--shadow-card);
+
+  .writing-vertical {
+    writing-mode: vertical-rl;
   }
-  
-  .card-shadow-hover {
-    box-shadow: var(--shadow-hover);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
