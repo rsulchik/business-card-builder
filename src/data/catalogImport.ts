@@ -4,7 +4,7 @@ import makeupImage from "@/assets/products/silk-veil-lip-tint.jpg";
 import setsImage from "@/assets/products/daily-dew-skin-set.jpg";
 import { getCatalogImage } from "./catalogImages";
 
-// Imported from косметика Р.xlsx. Verified VEMONTES matches use their source images;
+// Imported from косметика Р.xlsx. Verified VEMONTES/Kocosmetic matches use their source images;
 // unmatched rows keep the category placeholder until a product match is confirmed.
 export const importedCatalog: Product[] = [
   { slug: "imported-axcne-ampoule-kit-1",
