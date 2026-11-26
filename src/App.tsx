@@ -11,6 +11,8 @@ import StoreBoard from "./pages/StoreBoard";
 import Shop from "./pages/Shop";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Checkout from "./pages/Checkout";
+import Orders from "./pages/Orders";
 import Cart from "./pages/Cart";
 import ProductDetail from "./pages/ProductDetail";
 import CoreCollection from "./pages/CoreCollection";
@@ -46,6 +48,8 @@ const App = () => (
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/cart" element={<Cart />} />
+                  <Route path="/checkout" element={<Checkout />} />
+                  <Route path="/orders" element={<Orders />} />
                   <Route path="/product/:slug" element={<ProductDetail />} />
                   <Route path="/collections/core" element={<CoreCollection />} />
                   <Route path="/collections/sets-and-pairs" element={<SetsAndPairs />} />

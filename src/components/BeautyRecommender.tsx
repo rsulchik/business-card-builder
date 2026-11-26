@@ -1,3 +1,4 @@
+import { money, priceLabel, textFor } from "@/lib/commerce";
 import { FormEvent, useState } from "react";
 import { ArrowRight, Loader2, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -67,6 +68,7 @@ export default function BeautyRecommender() {
   };
 
   const handleAdd = (product: Product) => {
+    if (product.priceNeedsReview || product.badge === "sold-out") return;
     const name = getProductName(product, language);
     addItem({ slug: product.slug, name, price: product.price, image: product.image });
     toast({ title: language === "ru" ? "Добавлено в корзину" : language === "en" ? "Added to cart" : "Sebede goşuldy", description: `${name} — ${t("addToCart")}.` });
@@ -126,9 +128,9 @@ export default function BeautyRecommender() {
                 <div className="flex flex-1 flex-col p-6">
                   <p className="mb-4 text-[10px] tracking-[0.18em] text-accent">{String(index + 1).padStart(2, "0")}</p>
                   <h4 className="font-display text-2xl leading-tight text-foreground">{getProductName(product, language)}</h4>
-                  <p className="mb-5 mt-3 text-xs font-medium text-foreground">${product.price.toFixed(2)}</p>
+                  <p className="mb-5 mt-3 text-xs font-medium text-foreground">{priceLabel(product, language)}</p>
                   <p className="mb-7 flex-1 text-sm leading-6 text-muted-foreground">{reason}</p>
-                  <button type="button" onClick={() => handleAdd(product)} className="w-full border border-primary py-3.5 text-[10px] font-medium uppercase tracking-[0.15em] text-primary transition-colors hover:bg-primary hover:text-primary-foreground">{t("addToCart")}</button>
+                  <button type="button" disabled={product.priceNeedsReview || product.badge === "sold-out"} onClick={() => handleAdd(product)} className="w-full border border-primary py-3.5 text-[10px] font-medium uppercase tracking-[0.15em] text-primary transition-colors hover:bg-primary hover:text-primary-foreground">{t("addToCart")}</button>
                 </div>
               </article>
             ))}

@@ -13,6 +13,7 @@ interface CartContextType {
   addItem: (item: Omit<CartItem, "quantity">, quantity?: number) => void;
   removeItem: (slug: string) => void;
   updateQuantity: (slug: string, quantity: number) => void;
+  removePurchased: (purchased: { slug: string; quantity: number }[]) => void;
   totalItems: number;
   subtotal: number;
 }
@@ -40,7 +41,8 @@ function isCartItem(value: unknown): value is CartItem {
     typeof item.price === "number" &&
     typeof item.image === "string" &&
     typeof item.quantity === "number" &&
-    Number.isFinite(item.quantity) &&
+    Number.isFinite(item.price) && item.price >= 0 &&
+    Number.isInteger(item.quantity) && item.quantity <= 99 &&
     item.quantity > 0
   );
 }
@@ -71,10 +73,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [items]);
 
   const addItem = (item: Omit<CartItem, "quantity">, quantity = 1) => {
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > 99 || !Number.isFinite(item.price) || item.price < 0) return;
     setItems(prev => {
       const existing = prev.find(i => i.slug === item.slug);
       if (existing) {
-        return prev.map(i => i.slug === item.slug ? { ...i, quantity: i.quantity + quantity } : i);
+        return prev.map(i => i.slug === item.slug ? { ...i, quantity: Math.min(99, i.quantity + quantity) } : i);
       }
       return [...prev, { ...item, quantity }];
     });
@@ -83,15 +86,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const removeItem = (slug: string) => setItems(prev => prev.filter(i => i.slug !== slug));
 
   const updateQuantity = (slug: string, quantity: number) => {
+    if (!Number.isInteger(quantity) || quantity > 99) return;
     if (quantity <= 0) return removeItem(slug);
     setItems(prev => prev.map(i => i.slug === slug ? { ...i, quantity } : i));
   };
+
+  const removePurchased = (purchased: { slug: string; quantity: number }[]) => setItems(current => current.map(item => ({ ...item, quantity: item.quantity - (purchased.find(p => p.slug === item.slug)?.quantity ?? 0) })).filter(item => item.quantity > 0));
 
   const totalItems = items.reduce((sum, i) => sum + i.quantity, 0);
   const subtotal = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, totalItems, subtotal }}>
+    <CartContext.Provider value={{ items, addItem, removeItem, updateQuantity, removePurchased, totalItems, subtotal }}>
       {children}
     </CartContext.Provider>
   );

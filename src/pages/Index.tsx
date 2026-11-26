@@ -1,3 +1,4 @@
+import { money, priceLabel, textFor } from "@/lib/commerce";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
@@ -86,7 +87,7 @@ export default function Index() {
   }, [paused]);
   const find = (ids: number[]) => ids.flatMap(id => products.find(p => p.slug.endsWith("-" + id)) ?? []);
   const tile = (p: Product) => <Link key={p.slug} to={"/product/" + p.slug} className="home-tile">
-    <img src={p.image} loading="lazy" alt={getProductName(p, language)}/><strong>{getProductName(p, language)}</strong><span>${p.price.toFixed(2)}</span>
+    <img src={p.image} loading="lazy" alt={getProductName(p, language)}/><strong>{getProductName(p, language)}</strong><span>{priceLabel(p, language)}</span>
   </Link>;
   return <div className="vem-home">
     <Film labels={labels}/>

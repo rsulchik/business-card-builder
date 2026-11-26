@@ -1,3 +1,4 @@
+import Orders from "./Orders";
 import { useEffect, useState, type ChangeEvent } from "react";
 import { ArrowRight, Save, ShieldCheck } from "lucide-react";
 import { Link, Navigate, useLocation } from "react-router-dom";
@@ -84,12 +85,13 @@ export default function Admin() {
           <div><p className="text-[10px] uppercase tracking-[0.24em] text-accent">Lumière Admin</p><h1 className="mt-5 font-display text-3xl leading-tight md:text-5xl">Каталог.</h1><p className="mt-5 text-sm text-muted-foreground">Редактирование каталога для {user.email}</p></div>
           <Link to="/shop" className="inline-flex items-center gap-3 border-b border-foreground pb-1 text-[10px] uppercase tracking-[0.15em]">Открыть магазин <ArrowRight className="h-4 w-4" /></Link>
         </div>
-        {catalogError && <p className="mt-8 border-l-2 border-accent pl-4 text-sm leading-6 text-muted-foreground">Каталог пока использует локальный fallback: {catalogError}</p>}
+        <Orders admin />
+        {catalogError && <p className="mt-8 border-l-2 border-accent pl-4 text-sm leading-6 text-muted-foreground">Не удалось загрузить каталог: {catalogError}</p>}
         {error && <p role="alert" className="mt-8 border-l-2 border-destructive pl-4 text-sm leading-6 text-destructive">{error}</p>}
         <div className="mt-12 space-y-8">
           {catalogLoading ? <p className="text-sm text-muted-foreground">Загружаем товары...</p> : drafts.map(product => (
             <article key={product.slug} className="border border-border bg-secondary p-6 md:p-10">
-              <div className="mb-8 flex flex-col justify-between gap-4 border-b border-border pb-6 md:flex-row md:items-start"><div><p className="text-[10px] uppercase tracking-[0.18em] text-accent">{product.slug}</p><h2 className="mt-3 font-display text-4xl">{language === "ru" ? product.nameRu : language === "en" ? product.nameEn : product.name}</h2></div><p className="text-sm text-muted-foreground">Изображение: {product.slug}.jpg</p></div>
+              <div className="mb-8 flex flex-col justify-between gap-4 border-b border-border pb-6 md:flex-row md:items-start"><div><p className="text-[10px] uppercase tracking-[0.18em] text-accent">{product.slug}</p><h2 className="mt-3 font-display text-4xl">{language === "ru" ? product.nameRu : language === "en" ? product.nameEn : product.name}</h2></div><p className="text-sm text-muted-foreground">Фото: {product.imageKind ?? "не проверено"} · Исходная цена: {product.sourcePriceUsd ?? "—"} USD</p></div>
               <div className="grid gap-6 lg:grid-cols-3">
                 <div className="space-y-5">
                   <label className="block text-xs uppercase tracking-[0.14em]">Название TM<input value={product.name} onChange={updateText(product.slug, "name")} className="mt-2 h-11 w-full border border-border bg-background px-3 text-sm" /></label>
@@ -102,7 +104,8 @@ export default function Admin() {
                   <label className="block text-xs uppercase tracking-[0.14em]">Description EN<textarea value={product.descriptionEn ?? ""} onChange={updateText(product.slug, "descriptionEn")} rows={5} className="mt-2 w-full border border-border bg-background px-3 py-2 text-sm" /></label>
                 </div>
                 <div className="space-y-5">
-                  <div className="grid grid-cols-2 gap-4"><label className="block text-xs uppercase tracking-[0.14em]">Цена<input type="number" min="0" step="0.01" value={product.price} onChange={event => updateDraft(product.slug, "price", Number(event.target.value))} className="mt-2 h-11 w-full border border-border bg-background px-3 text-sm" /></label><label className="block text-xs uppercase tracking-[0.14em]">Старая цена<input type="number" min="0" step="0.01" value={product.originalPrice ?? ""} onChange={event => updateDraft(product.slug, "originalPrice", event.target.value ? Number(event.target.value) : undefined)} className="mt-2 h-11 w-full border border-border bg-background px-3 text-sm" /></label></div>
+                  <div className="grid grid-cols-2 gap-4"><label className="block text-xs uppercase tracking-[0.14em]">Цена, TMT<input type="number" min="0" step="0.01" value={product.price} onChange={event => updateDraft(product.slug, "price", Number(event.target.value))} className="mt-2 h-11 w-full border border-border bg-background px-3 text-sm" /></label><label className="block text-xs uppercase tracking-[0.14em]">Старая цена, TMT<input type="number" min="0" step="0.01" value={product.originalPrice ?? ""} onChange={event => updateDraft(product.slug, "originalPrice", event.target.value ? Number(event.target.value) : undefined)} className="mt-2 h-11 w-full border border-border bg-background px-3 text-sm" /></label></div>
+                  <label className="flex items-center gap-3 text-sm"><input type="checkbox" checked={product.priceNeedsReview ?? false} onChange={event => setDrafts(current => current.map(p => p.slug === product.slug ? {...p,priceNeedsReview:event.target.checked} : p))} />Цена требует проверки (заказ отключён)</label>
                   <label className="block text-xs uppercase tracking-[0.14em]">Категория<select value={product.category} onChange={updateText(product.slug, "category")} className="mt-2 h-11 w-full border border-border bg-background px-3 text-sm">{categories.map(category => <option key={category} value={category}>{category}</option>)}</select></label>
                   <label className="block text-xs uppercase tracking-[0.14em]">Статус<select value={product.badge ?? ""} onChange={event => updateDraft(product.slug, "badge", event.target.value || undefined)} className="mt-2 h-11 w-full border border-border bg-background px-3 text-sm"><option value="">Обычный</option><option value="sale">Скидка</option><option value="sold-out">Нет в наличии</option></select></label>
                   <label className="block text-xs uppercase tracking-[0.14em]">Остаток RU<input value={product.availabilityRu ?? ""} onChange={updateText(product.slug, "availabilityRu")} className="mt-2 h-11 w-full border border-border bg-background px-3 text-sm" /></label>

@@ -1,3 +1,4 @@
+import { money, priceLabel, textFor } from "@/lib/commerce";
 import { productTypeLabel } from "@/data/productTypes";
 import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
@@ -25,9 +26,10 @@ export default function ProductDetail() {
   const related = products.filter(candidate => candidate.slug !== product.slug && candidate.badge !== "sold-out").slice(0, 3);
   const localizedName = getProductName(product, language);
   const isSoldOut = product.badge === "sold-out";
+  const needsReview = product.priceNeedsReview;
 
   const handleAddToCart = () => {
-    if (isSoldOut) return;
+    if (isSoldOut || needsReview) return;
 
     addItem({ slug: product.slug, name: localizedName, price: product.price, image: product.image }, quantity);
     toast({ title: language === "ru" ? "Добавлено в корзину" : language === "en" ? "Added to cart" : "Sebede goşuldy", description: language === "ru" ? `${quantity} шт. «${localizedName}» добавлено в корзину.` : language === "en" ? `${quantity} × ${localizedName} added to your cart.` : `${quantity} sany ${localizedName} sebediňize goşuldy.` });
@@ -44,20 +46,23 @@ export default function ProductDetail() {
           </nav>
           <div className="grid items-start gap-12 lg:grid-cols-[1.12fr_0.88fr] lg:gap-20">
             <div className="relative aspect-square border border-border">
-              <img src={product.image} alt={localizedName} className="absolute inset-0 h-full w-full bg-white object-contain" />
+              <img onError={e => { e.currentTarget.src = "/placeholder.svg"; e.currentTarget.onerror = null; }} src={product.image} alt={localizedName} className="absolute inset-0 h-full w-full bg-white object-contain" />
+              {(product.isFamilyPhoto || product.imageKind === "pending") && <span className="absolute bottom-4 left-4 right-4 bg-white/95 p-3 text-sm">{product.isFamilyPhoto ? textFor(language,"Фото линейки; объём указан в названии товара.","Product line photo; see product name for pack size.","Önüm tapgyrynyň suraty; ölçeg önüm adynda görkezilýär.") : textFor(language,"Фото этого товара уточняется","Exact product photo pending","Önümiň suraty anyklanýar")}</span>}
               {product.badge === "sale" && <span className="absolute left-5 top-5 bg-accent px-4 py-2 text-[9px] uppercase tracking-[0.15em] text-accent-foreground">{t("sale")}</span>}
             </div>
             <div className="lg:sticky lg:top-[104px] lg:border-t lg:border-foreground lg:pt-6">
               <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.22em] text-accent">{[(productTypeLabel(product.productType, language) ?? getCategoryLabel(product.category, language)), product.brand].filter(Boolean).join(" · ")}</p>
               <h1 className="text-balance font-display text-3xl font-medium leading-tight tracking-tight text-foreground md:text-4xl">{getProductName(product, language)}</h1>
               <div className="mt-7 flex items-center gap-4">
-                <p className="text-lg font-medium text-foreground">${product.price.toFixed(2)}</p>
-                {product.originalPrice && <p className="text-sm text-muted-foreground line-through">${product.originalPrice.toFixed(2)}</p>}
+                <p className="text-lg font-medium text-foreground">{priceLabel(product, language)}</p>
+                {product.originalPrice && <p className="text-sm text-muted-foreground line-through">{money(product.originalPrice)}</p>}
               </div>
               {product.availability && <p className="mt-3 text-xs text-accent">{getProductAvailability(product, language)}</p>}
               <p className="my-8 border-t border-border pt-8 text-sm leading-7 text-muted-foreground">{getProductDescription(product, language)}</p>
 
-              {!isSoldOut ? (
+              <dl className="mb-8 space-y-3 border-y border-border py-5 text-sm"><div className="flex justify-between gap-6"><dt>{textFor(language,"Бренд","Brand","Marka")}</dt><dd>{product.brand || "—"}</dd></div><div className="flex justify-between gap-6"><dt>{textFor(language,"Тип","Type","Görnüş")}</dt><dd>{productTypeLabel(product.productType,language) || "—"}</dd></div></dl>
+              <details className="mb-6 text-sm"><summary className="cursor-pointer">{textFor(language,"Состав и применение","Ingredients & use","Düzümi we ulanylyşy")}</summary><p className="mt-3 leading-6 text-muted-foreground">{textFor(language,"Точный состав и инструкция для этого объёма пока не подтверждены. Перед использованием сверьтесь с упаковкой. Уточнить данные можно через страницу контактов.","The exact ingredients and instructions for this size have not been verified yet. Check the packaging before use or contact us for details.","Bu ölçegiň düzümi we görkezmesi entek tassyklanmady. Ulanylmazdan öň gaplamany barlaň ýa-da habarlaşyň.")}</p><Link to="/contact" className="mt-2 inline-block underline">{textFor(language,"Уточнить информацию","Ask for details","Maglumaty anyklamak")}</Link></details>
+              {!isSoldOut && !needsReview ? (
                 <div className="flex flex-col gap-3 sm:flex-row">
                   <QuantitySelector quantity={quantity} onChange={setQuantity} />
                   <button type="button" onClick={handleAddToCart} className="flex h-12 flex-1 items-center justify-center gap-4 bg-primary px-7 text-[10px] font-medium uppercase tracking-[0.16em] text-primary-foreground transition-opacity hover:opacity-85">
@@ -65,7 +70,7 @@ export default function ProductDetail() {
                   </button>
                 </div>
               ) : (
-                <button type="button" disabled className="h-12 w-full cursor-not-allowed bg-muted text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{t("soldOut")}</button>
+                <button type="button" disabled className="h-12 w-full cursor-not-allowed bg-muted text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">{needsReview ? textFor(language,"Цена уточняется","Price on request","Bahasy anyklanýar") : t("soldOut")}</button>
               )}
 
             </div>

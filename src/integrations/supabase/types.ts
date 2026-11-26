@@ -47,8 +47,16 @@ export type Database = {
         }
         Relationships: []
       }
+      orders: {
+        Row: { id: string; order_number: number; user_id: string; request_id: string; request_payload: Json; customer: Json; items: Json; subtotal: number; currency: string; payment_method: string; status: string; created_at: string }
+        Insert: never
+        Update: { status?: string }
+        Relationships: []
+      }
       catalog_products: {
         Row: {
+          price_needs_review: boolean
+          source_price_usd: number | null
           product_type: string | null
           brand: string | null
           image_source_url: string | null
@@ -73,6 +81,8 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          price_needs_review?: boolean
+          source_price_usd?: number | null
           product_type?: string | null
           brand?: string | null
           image_source_url?: string | null
@@ -97,6 +107,8 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          price_needs_review?: boolean
+          source_price_usd?: number | null
           product_type?: string | null
           brand?: string | null
           image_source_url?: string | null
@@ -127,6 +139,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      place_order: {
+        Args: { p_request_id: string; p_customer: Json; p_items: Json; p_expected_total: number }
+        Returns: Json
+      }
       catalog_suggestions: {
         Args: { skin: string; concern: string; note: string; lang: string }
         Returns: { summary: string; recommendations: { slug: string; reason: string }[] }

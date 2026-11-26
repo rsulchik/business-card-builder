@@ -4,6 +4,8 @@ import { isRemoteCatalogImage } from "@/data/catalogImages";
 import { supabase } from "@/integrations/supabase/client";
 
 type CatalogRow = {
+  price_needs_review?: boolean;
+  source_price_usd?: number | null;
   product_type?: string | null;
   brand?: string | null;
   image_kind?: string | null;
@@ -42,6 +44,9 @@ function mapRow(row: CatalogRow): Product {
     slug: row.slug,
     productType: row.product_type ?? undefined,
     brand: row.brand ?? undefined,
+    priceNeedsReview: row.price_needs_review ?? false,
+    sourcePriceUsd: row.source_price_usd ?? undefined,
+    imageKind: row.image_kind ?? undefined,
     isFamilyPhoto: row.image_kind === "product_family",
     name: row.name_tm,
     nameRu: row.name_ru,
@@ -73,6 +78,7 @@ function toRow(product: Product): CatalogRow {
     description_en: product.descriptionEn ?? fallback?.description ?? product.description,
     category: product.category,
     price: Number(product.price),
+    price_needs_review: product.priceNeedsReview ?? false,
     original_price: product.originalPrice ?? null,
     badge: product.badge ?? null,
     availability_tm: product.availability ?? null,

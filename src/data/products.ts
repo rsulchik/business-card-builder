@@ -4,6 +4,9 @@ import { importedCatalog } from "@/data/catalogImport";
 export type ProductCategory = "skincare" | "makeup" | "sets";
 
 export interface Product {
+  priceNeedsReview?: boolean;
+  imageKind?: string;
+  sourcePriceUsd?: number;
   productType?: string;
   brand?: string;
   isFamilyPhoto?: boolean;
@@ -60,4 +63,4 @@ export function getCategoryLabel(category: ProductCategory, language: Language) 
     : { skincare: "Skincare", makeup: "Makeup", sets: "Beauty sets" }[category];
 }
 
-export const products: Product[] = importedCatalog;
+export const products: Product[] = importedCatalog.map(p => ({ ...p, sourcePriceUsd: p.price, priceNeedsReview: p.price === 0.02, price: Math.round(p.price * 1800) / 100, originalPrice: p.originalPrice ? Math.round(p.originalPrice * 1800) / 100 : undefined }));

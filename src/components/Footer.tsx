@@ -1,3 +1,4 @@
+import { textFor } from "@/lib/commerce";
 import { Mail, Youtube } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/i18n";
@@ -34,7 +35,7 @@ export default function Footer() {
           </section>
           <section>
             <h2>{l.payment}</h2>
-            <p>{t("checkoutSoon")}</p>
+            <p>{textFor(language,"Оплата при получении · TMT","Pay on delivery · TMT","Kabul edilende töleg · TMT")}</p>
             <Link to="/contact">{l.paymentHelp}</Link>
           </section>
         </div>

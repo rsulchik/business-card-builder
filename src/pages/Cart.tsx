@@ -1,3 +1,4 @@
+import { money, priceLabel, textFor } from "@/lib/commerce";
 import { ArrowRight, ShoppingBag, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
@@ -7,9 +8,12 @@ import { useCatalog } from "@/context/CatalogContext";
 import QuantitySelector from "@/components/QuantitySelector";
 
 export default function Cart() {
-  const { items, updateQuantity, removeItem, subtotal } = useCart();
+  const { items, updateQuantity, removeItem } = useCart();
   const { language, t } = useLanguage();
-  const { products } = useCatalog();
+  const { products, isLoading, error } = useCatalog();
+  const currentItems = items.map(item => ({...item, price: products.find(p=>p.slug===item.slug)?.price ?? 0, image: products.find(p=>p.slug===item.slug)?.image ?? item.image}));
+  const subtotal = currentItems.reduce((sum,item)=>sum+Math.round(item.price*100)*item.quantity,0)/100;
+  const invalid = items.some(item=>{ const p=products.find(p=>p.slug===item.slug); return !p || p.priceNeedsReview || p.badge === "sold-out"; });
   const getItemName = (item: { slug: string; name: string }) => {
     const product = products.find(candidate => candidate.slug === item.slug);
     return product ? getProductName(product, language) : item.name;
@@ -39,11 +43,11 @@ export default function Cart() {
         <h1 className="font-display text-3xl leading-none md:text-5xl">{t("basket")}</h1>
         <div className="mt-14 grid items-start gap-14 lg:grid-cols-[1.4fr_0.6fr]">
           <div className="border-t border-border">
-            {items.map(item => {
+            {currentItems.map(item => {
               const product = products.find(candidate => candidate.slug === item.slug);
               return (
                 <article key={item.slug} className="grid grid-cols-[96px_1fr] gap-5 border-b border-border py-7 sm:grid-cols-[144px_1fr] sm:gap-7">
-                  <Link to={`/product/${item.slug}`} className="aspect-[4/5] bg-warm-bg"><img src={item.image} alt={getItemName(item)} className="h-full w-full object-cover" /></Link>
+                  <Link to={`/product/${item.slug}`} className="aspect-[4/5] bg-warm-bg"><img src={item.image} alt={getItemName(item)} className="h-full w-full object-contain" /></Link>
                   <div className="flex flex-col justify-between gap-6 py-1">
                     <div className="flex items-start justify-between gap-4">
                       <div>
@@ -54,7 +58,7 @@ export default function Cart() {
                     </div>
                     <div className="flex flex-wrap items-end justify-between gap-4">
                       <QuantitySelector quantity={item.quantity} onChange={q => updateQuantity(item.slug, q)} />
-                      <p className="text-sm font-medium">${(item.price * item.quantity).toFixed(2)}</p>
+                      <p className="text-sm font-medium">{product ? priceLabel({...product, price: item.price * item.quantity}, language) : "—"}</p>
                     </div>
                   </div>
                 </article>
@@ -64,11 +68,12 @@ export default function Cart() {
           <aside className="bg-secondary p-7 md:p-9 lg:sticky lg:top-[140px]">
             <h2 className="font-display text-4xl">{t("total")}</h2>
             <div className="mt-8 space-y-4 border-y border-border py-6 text-sm">
-              <div className="flex justify-between gap-4"><span className="text-muted-foreground">{t("subtotal")}</span><span>${subtotal.toFixed(2)}</span></div>
-              <div className="flex justify-between gap-4"><span className="text-muted-foreground">{t("shipping")}</span><span className="text-xs">{t("calculatedAtCheckout")}</span></div>
+              <div className="flex justify-between gap-4"><span className="text-muted-foreground">{t("subtotal")}</span><span>{invalid || isLoading || error ? "—" : money(subtotal)}</span></div>
+              <div className="flex justify-between gap-4"><span className="text-muted-foreground">{t("shipping")}</span><span className="text-xs">{textFor(language,"Согласует менеджер","Confirmed by manager","Dolandyryjy tassyklar")}</span></div>
             </div>
-            <div className="my-6 flex items-baseline justify-between gap-4"><span className="text-sm">{t("subtotal")}</span><span className="font-display text-3xl">${subtotal.toFixed(2)}</span></div>
-            <button type="button" disabled className="w-full cursor-not-allowed bg-muted px-6 py-4 text-[10px] font-medium uppercase tracking-[0.15em] text-muted-foreground">{t("checkoutSoon")}</button>
+            <div className="my-6 flex items-baseline justify-between gap-4"><span className="text-sm">{t("subtotal")}</span><span className="font-display text-3xl">{invalid || isLoading || error ? "—" : money(subtotal)}</span></div>
+            <Link to="/checkout" className="block w-full bg-primary px-6 py-4 text-center text-sm text-primary-foreground">{textFor(language,"Оформить заказ","Checkout","Sargyt et")}</Link>
+            {(invalid || isLoading || error) && <p className="mt-4 text-sm text-destructive">{textFor(language,"Проверьте корзину: есть товары, недоступные для заказа, или каталог ещё не загружен.","Review your basket: some products are unavailable or the catalog is still loading.","Sebedi barlaň: käbir önümler elýeterli däl ýa-da katalog ýüklenýär.")}</p>}
             <Link to="/shop" className="mt-6 flex items-center justify-center gap-2 text-[10px] uppercase tracking-[0.14em] text-muted-foreground transition-opacity hover:opacity-60">{t("continueShopping")} <ArrowRight className="h-3.5 w-3.5" /></Link>
           </aside>
         </div>

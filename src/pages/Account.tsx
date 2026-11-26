@@ -23,7 +23,7 @@ const favoriteCategoryOptions = [
 
 export default function Account() {
   const { user, isLoading, signOut } = useAuth();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
   const [fullName, setFullName] = useState("");
@@ -138,6 +138,7 @@ export default function Account() {
           </form>
 
           <aside>
+            <Link to="/orders" className="mb-8 block border-b border-border pb-6 text-2xl">{language === "ru" ? "Мои заказы" : language === "en" ? "My orders" : "Sargytlarym"}</Link>
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{t("madeForYou")}</p>
             <h2 className="mt-4 font-display text-3xl leading-[1.02]">{t("refreshRoutine")}</h2>
             <p className="mt-6 text-sm leading-7 text-muted-foreground">{t("accountAdvice")}</p>
