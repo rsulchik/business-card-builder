@@ -15,7 +15,7 @@ export default function About() {
         <div className="mx-auto max-w-[1400px]">
           <p className="mb-6 text-[10px] font-medium uppercase tracking-[0.24em] text-accent">{t("aboutEyebrow")}</p>
           <div className="grid gap-12 lg:grid-cols-[1.25fr_0.75fr] lg:items-end">
-            <h1 className="whitespace-pre-line text-balance font-display text-6xl leading-[0.88] tracking-[-0.04em] md:text-8xl lg:text-9xl">{t("aboutHeading")}</h1>
+            <h1 className="whitespace-pre-line text-balance font-display text-3xl leading-[0.88] tracking-[-0.04em] md:text-5xl lg:text-9xl">{t("aboutHeading")}</h1>
             <p className="max-w-md text-sm leading-7 text-muted-foreground lg:pb-2">{t("aboutIntro")}</p>
           </div>
         </div>
@@ -29,7 +29,7 @@ export default function About() {
         <div className="mx-auto grid max-w-[1200px] gap-12 lg:grid-cols-[0.65fr_1.35fr]">
           <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-accent">{t("ourBeginning")}</p>
           <div className="space-y-7">
-            <h2 className="font-display text-4xl leading-tight md:text-6xl">{t("beginningHeading")}</h2>
+            <h2 className="font-display text-4xl leading-tight md:text-3xl">{t("beginningHeading")}</h2>
             <div className="grid gap-7 pt-4 text-sm leading-7 text-muted-foreground md:grid-cols-2">
               <p>{t("beginningText1")}</p>
               <p>{t("beginningText2")}</p>
@@ -55,7 +55,7 @@ export default function About() {
 
       <section className="bg-primary px-6 py-24 text-center text-primary-foreground md:px-10 md:py-32">
         <p className="mb-5 text-[10px] uppercase tracking-[0.24em] text-primary-foreground/55">Lumière Cosmetics</p>
-        <h2 className="mx-auto max-w-4xl font-display text-5xl leading-[0.98] md:text-7xl">{t("aboutCta")}</h2>
+        <h2 className="mx-auto max-w-4xl font-display text-3xl leading-[0.98] md:text-5xl">{t("aboutCta")}</h2>
         <Link to="/collections/core" className="mt-10 inline-flex items-center gap-4 border border-primary-foreground/50 px-7 py-4 text-[10px] font-medium uppercase tracking-[0.16em] transition-colors hover:bg-primary-foreground hover:text-primary">{t("explore")} <ArrowRight className="h-4 w-4" /></Link>
       </section>
     </>

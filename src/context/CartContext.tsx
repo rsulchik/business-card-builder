@@ -19,6 +19,18 @@ interface CartContextType {
 
 const CART_STORAGE_KEY = "terra-studios-cart";
 
+const retiredDemoSlugs = new Set([
+  "radiance-renewal-serum",
+  "velvet-cloud-moisturizer",
+  "rose-quartz-facial-oil",
+  "botanical-clay-mask",
+  "silk-veil-lip-tint",
+  "mineral-glow-highlighter",
+  "petal-soft-cream-blush",
+  "botanical-lash-brow-serum",
+  "daily-dew-skin-set",
+]);
+
 function isCartItem(value: unknown): value is CartItem {
   if (typeof value !== "object" || value === null) return false;
   const item = value as Partial<CartItem>;
@@ -39,7 +51,7 @@ function readStoredCart(): CartItem[] {
     if (!raw) return [];
     const parsed: unknown = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
-    return parsed.filter(isCartItem);
+    return parsed.filter(isCartItem).filter(item => !retiredDemoSlugs.has(item.slug));
   } catch {
     return [];
   }

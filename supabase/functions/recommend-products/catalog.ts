@@ -8,59 +8,75 @@ export interface CatalogProduct {
 
 export const availableCatalog: CatalogProduct[] = [
   {
-    slug: "radiance-renewal-serum",
-    name: "Ýagtylyk üçin täzeleýji serum",
-    price: 48,
-    description: "Gialuron kislotasy, niasinamid we ösümlik ekstraktlary bolan ýüpek ýaly gündelik serum. Çyglandyryjy kremiň we makýažyň astyna aňsat ulanylýar, derini çygly, tekiz we tebigy ýagty edýär.",
-    tags: ["skincare", "hydration", "glow", "daily-routine"],
+    "slug": "imported-axcne-ampoule-kit-1",
+    "name": "AXCNE Ampoule Kit",
+    "price": 37.34,
+    "description": "Ampulalar toplumy.",
+    "tags": [
+      "sets"
+    ]
   },
   {
-    slug: "velvet-cloud-moisturizer",
-    name: "Mäkäm Bulut çyglandyryjy krem",
-    price: 36,
-    description: "Skwalan, şi ýagy we ýulaf ekstrakty bolan ýumşak, rahatlyk berýän ýüz kremi. Mäkäm dokumasy agyrlık duýdurman erýär, uzak wagt rahatlyk we täze, çygly görünüş berýär.",
-    tags: ["skincare", "hydration", "gentle-care", "daily-routine"],
+    "slug": "imported-phyderma-17",
+    "name": "Phyderma",
+    "price": 14.52,
+    "description": "Köpürjiklenýän arassalaýjy gel.",
+    "tags": [
+      "skincare"
+    ]
   },
   {
-    slug: "rose-quartz-facial-oil",
-    name: "Gülgüne kwars ýüz ýagy",
-    price: 42,
-    description: "Itburnu, jojoba we limnantes ýaglarynyň ýeňil garyndysy derini ýagly duýgy galdyrman çyg saklaýar. Çyglandyryjy kremiň üstüne birnäçe damja basylýar we deriň ýumşak, ýagty görünmegine ýardam edýär.",
-    tags: ["skincare", "hydration", "glow"],
+    "slug": "imported-vlaga-maks-aqua-mist-120-ml-39",
+    "name": "Moisture Max Aqua Mist · 120 ml",
+    "price": 14.52,
+    "description": "Ýüz üçin çyglandyryjy spreý. Gaplama — 120 ml.",
+    "tags": [
+      "skincare"
+    ]
   },
   {
-    slug: "botanical-clay-mask",
-    name: "Ösümlikli lýaý maskasy",
-    price: 28,
-    description: "Ýumşak kaolin lýaýy bilen ýaşyl çaýy we romashkany birleşdirýän ýuwulýan krem maska. Deriniň üstündeki hapalary arassalaýar, deriň rahat, ýumşak we täze bolmagyny üpjün edýär.",
-    tags: ["skincare", "gentle-care", "even-tone"],
+    "slug": "imported-hyccine-cream-61",
+    "name": "HyCCINE Cream",
+    "price": 20.75,
+    "description": "Çyglandyryjy krem.",
+    "tags": [
+      "skincare"
+    ]
   },
   {
-    slug: "silk-veil-lip-tint",
-    name: "Ýüpek Perde dodaý boýagy",
-    price: 24,
-    description: "Gündelik ulanyş üçin amatly gülgüne-kahweýi reňkdäki, agyrlygy duýulmaýan dodaý boýagy. Ýumşak atlas ýaly tamamlanýar; reňki ýeňil ýa-da birnäçe gatlap ulanyp bolýar.",
-    tags: ["makeup", "lip-color", "gift"],
+    "slug": "imported-vlaga-maks-gidro-krem-40-g-67",
+    "name": "Moisture Max Hydro Cream · 40 g",
+    "price": 18.68,
+    "description": "Çyglandyryjy krem. Gaplama — 40 g.",
+    "tags": [
+      "skincare"
+    ]
   },
   {
-    slug: "mineral-glow-highlighter",
-    name: "Mineral ýagtylyk haýlaýteri",
-    price: 32,
-    description: "Inçe öwülen şampan reňkli haýlaýter ýagtylygy inje ýaly ýumşak şöhle bilen yzyna gaýtarýar. Ýaňak çykyntlaryna, gaş astyndaky süňklere we gözüň içki burçlaryna ulanylýar.",
-    tags: ["makeup", "glow", "gift"],
+    "slug": "imported-glow-pot-mirror-83",
+    "name": "Glow Pot Mirror",
+    "price": 12.45,
+    "description": "Makiýaž üçin kuşon.",
+    "tags": [
+      "makeup"
+    ]
   },
   {
-    slug: "petal-soft-cream-blush",
-    name: "Gülýaprak ýaly ýumşak krem allık",
-    price: 28,
-    description: "Yly şaftaly-gülgüne reňkdäki, aňsat garyşýan krem allık. Balzam ýaly dokumasy barmak ujumlary bilen ýaňaklara aňsat ýaýraýar we tebigy gülgüne şöhle döredýär.",
-    tags: ["makeup", "cheek-color", "gift"],
+    "slug": "imported-axcne-cream-mask-94",
+    "name": "AXCNE Booster Cream Mask",
+    "price": 24.9,
+    "description": "Köşeşdiriji krem-maska.",
+    "tags": [
+      "skincare"
+    ]
   },
   {
-    slug: "daily-dew-skin-set",
-    name: "Gündelik Şebnem deri toplumy",
-    price: 58,
-    description: "Ýumşak krem arassalaýjy, Ýagtylyk üçin täzeleýji serum we Mäkäm Bulut çyglandyryjy kremden ybarat doly üç basgançakly ideg. Ýönekeý irler, rahat agşamlar we gözel çyglandyrylan deri üçin döredildi.",
-    tags: ["skincare", "hydration", "glow", "gentle-care", "daily-routine", "gift"],
-  },
+    "slug": "imported-syvorotka-derma-max-brilliance-50-ml-126",
+    "name": "Derma Max Brilliance Serum · 50 ml",
+    "price": 18.68,
+    "description": "Deriniň reňkine ideg edýän serum. Gaplama — 50 ml. Suratda şu tapgyryň önümi görkezilýär. Saýlanan görnüşiň gaplamasy tapawutlanyp biler.",
+    "tags": [
+      "skincare"
+    ]
+  }
 ];

@@ -1,3 +1,4 @@
+import { productTypeLabel } from "@/data/productTypes";
 import { useState } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Plus } from "lucide-react";
@@ -39,16 +40,16 @@ export default function ProductDetail() {
         <div className="mx-auto max-w-[1400px]">
           <nav className="mb-8 flex items-center gap-3 text-[10px] uppercase tracking-[0.13em] text-muted-foreground" aria-label="Önüm ýoly">
             <Link to="/shop" className="inline-flex items-center gap-2 transition-opacity hover:opacity-60"><ArrowLeft className="h-3.5 w-3.5" /> {t("shop")}</Link>
-            <span>/</span><span>{getCategoryLabel(product.category, language)}</span>
+            <span>/</span><span>{(productTypeLabel(product.productType, language) ?? getCategoryLabel(product.category, language))}</span>
           </nav>
           <div className="grid items-start gap-12 lg:grid-cols-[1.12fr_0.88fr] lg:gap-20">
-            <div className="relative aspect-[4/5] bg-warm-bg lg:aspect-auto lg:min-h-[720px]">
+            <div className="relative aspect-square border border-border">
               <img src={product.image} alt={localizedName} className="absolute inset-0 h-full w-full bg-white object-contain" />
               {product.badge === "sale" && <span className="absolute left-5 top-5 bg-accent px-4 py-2 text-[9px] uppercase tracking-[0.15em] text-accent-foreground">{t("sale")}</span>}
             </div>
-            <div className="lg:sticky lg:top-[140px] lg:py-8">
-              <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.22em] text-accent">{[getCategoryLabel(product.category, language), product.brand].filter(Boolean).join(" · ")}</p>
-              <h1 className="text-balance font-display text-5xl leading-[0.95] tracking-[-0.03em] text-foreground md:text-7xl">{getProductName(product, language)}</h1>
+            <div className="lg:sticky lg:top-[104px] lg:border-t lg:border-foreground lg:pt-6">
+              <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.22em] text-accent">{[(productTypeLabel(product.productType, language) ?? getCategoryLabel(product.category, language)), product.brand].filter(Boolean).join(" · ")}</p>
+              <h1 className="text-balance font-display text-3xl font-medium leading-tight tracking-tight text-foreground md:text-4xl">{getProductName(product, language)}</h1>
               <div className="mt-7 flex items-center gap-4">
                 <p className="text-lg font-medium text-foreground">${product.price.toFixed(2)}</p>
                 {product.originalPrice && <p className="text-sm text-muted-foreground line-through">${product.originalPrice.toFixed(2)}</p>}

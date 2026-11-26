@@ -1,7 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { ArrowRight, Check } from "lucide-react";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
-import heroImage from "@/assets/hero-beauty.jpg";
 import SocialSignInButtons from "@/components/SocialSignInButtons";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useAuth } from "@/context/AuthContext";
@@ -88,23 +87,14 @@ export default function AuthPage({ mode }: { mode: AuthMode }) {
   const inputClass = "h-12 w-full border-0 border-b border-border bg-transparent px-0 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-accent focus:ring-0";
 
   return (
-    <section className="grid min-h-[calc(100svh-108px)] lg:grid-cols-[0.9fr_1.1fr]">
-      <div className="relative hidden overflow-hidden lg:block">
-        <img src={heroImage} alt="Lumière Cosmetics deri idegi önümleri" className="absolute inset-0 h-full w-full object-cover" />
-        <div className="absolute inset-0 bg-primary/25" />
-        <div className="absolute inset-x-0 bottom-0 p-12 text-primary-foreground">
-          <p className="text-[10px] uppercase tracking-[0.25em]">Lumière Cosmetics</p>
-          <p className="mt-5 max-w-md font-display text-5xl leading-[1.02]">Gözelligiňiz üçin size mynasyp bolan ýer.</p>
-        </div>
-      </div>
-
-      <div className="flex items-center px-6 py-14 md:px-12 lg:px-16 xl:px-24">
+    <section className="mx-auto min-h-[65vh] max-w-xl px-6 py-14 md:py-20">
+      <div className="border-t border-foreground pt-8">
         <div className="mx-auto w-full max-w-md">
           {complete ? (
             <div>
               <span className="mb-7 flex h-12 w-12 items-center justify-center rounded-full bg-secondary text-accent"><Check className="h-5 w-5" /></span>
               <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-accent">{copy.eyebrow}</p>
-              <h1 className="mt-5 font-display text-6xl leading-[0.95] tracking-[-0.035em]">{mode === "register" ? t("checkEmail") : t("resetEmailSent")}</h1>
+              <h1 className="mt-5 font-display text-3xl leading-[0.95] tracking-[-0.035em]">{mode === "register" ? t("checkEmail") : t("resetEmailSent")}</h1>
               <p className="mt-6 text-sm leading-7 text-muted-foreground">
                 {mode === "register"
                   ? t("emailConfirmation", { email })
@@ -115,7 +105,7 @@ export default function AuthPage({ mode }: { mode: AuthMode }) {
           ) : (
             <>
               <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-accent">{copy.eyebrow}</p>
-              <h1 className="mt-5 font-display text-6xl leading-[0.92] tracking-[-0.04em] md:text-7xl">{copy.title}</h1>
+              <h1 className="mt-5 font-display text-3xl leading-[0.92] tracking-[-0.04em] md:text-5xl">{copy.title}</h1>
               <p className="mt-6 text-sm leading-7 text-muted-foreground">{copy.intro}</p>
 
               {mode !== "forgot" && import.meta.env.VITE_AUTH_MODE !== "email" && (

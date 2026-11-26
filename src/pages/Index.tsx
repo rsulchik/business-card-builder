@@ -1,194 +1,118 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowRight, ArrowUpRight, Feather, Leaf, Sparkles } from "lucide-react";
-import heroBg from "@/assets/hero-beauty.jpg";
-import coreCollection from "@/assets/collections/core-beauty.jpg";
-import setsAndPairs from "@/assets/collections/beauty-sets.jpg";
-import NewsletterSignup from "@/components/NewsletterSignup";
-import ProductCard from "@/components/ProductCard";
-import { getProductName } from "@/data/products";
-import { useLanguage } from "@/i18n";
+import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 import { useCatalog } from "@/context/CatalogContext";
+import { getProductName, type Product } from "@/data/products";
+import { useLanguage } from "@/i18n";
+import { brandCollections } from "@/data/brandCollections";
+import "./home.css";
 
-const values = [
-  { icon: Leaf, title: "naturalFormulas" as const, text: "naturalFormulasText" as const },
-  { icon: Feather, title: "lightTextures" as const, text: "lightTexturesText" as const },
-  { icon: Sparkles, title: "personalChoice" as const, text: "personalChoiceText" as const },
+const film = "HoV4vUBeDN0";
+const cdn = "https://ecimg.cafe24img.com/pg289b35685386077/vemontes/web/upload/category/editor/";
+const lines = [
+  { name: "AXCNE", photo: cdn + "2025/07/17/21b9bd7f9415f530b3762a85c13a0508.png", ids: [59, 94, 95] },
+  { name: "EXODUO", photo: cdn + "2023/05/30/8b38867903752055be722e9656c45c79.jpg", ids: [5, 100, 101] },
 ];
+const copy = {
+  ru: ["Подборки", "Уход за кожей", "Наборы", "Выбор редакции", "Коллекция VEMONTES", "Весь каталог", "Пауза", "Смотреть видео", "Назад", "Далее"],
+  en: ["Collections", "Skincare", "Discovery sets", "Editor's selection", "The VEMONTES collection", "Shop all", "Pause", "Play film", "Previous", "Next"],
+  tm: ["Toplumlar", "Deri idegi", "Önüm toplumlary", "Saýlanan önümler", "VEMONTES toplumy", "Ähli önümler", "Sakla", "Wideony gör", "Yza", "Öňe"],
+};
+
+function Film({ labels }: { labels: string[] }) {
+  const frame = useRef<HTMLIFrameElement>(null);
+  const [playing, setPlaying] = useState(false);
+  const [failed, setFailed] = useState(false);
+  const [enabled, setEnabled] = useState(() => !matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const host = "https://www.youtube.com";
+  const send = (message: object) => frame.current?.contentWindow?.postMessage(JSON.stringify(message), host);
+  useEffect(() => {
+    if (!enabled || failed) return;
+    const listen = () => send({ event: "listening", id: "home-film", channel: "widget" });
+    const onMessage = (e: MessageEvent) => {
+      if (e.source !== frame.current?.contentWindow || e.origin !== host || typeof e.data !== "string") return;
+      let msg; try { msg = JSON.parse(e.data); } catch { return; }
+      if (msg.event === "onReady") {
+        ["onStateChange", "onError"].forEach(name => send({ event: "command", func: "addEventListener", args: [name] }));
+      }
+      if (msg.event === "onError") setFailed(true);
+      const state = msg.event === "onStateChange" ? msg.info : msg.info?.playerState;
+      if (state === 1 || state === 2 || state === 0) setPlaying(state === 1);
+    };
+    window.addEventListener("message", onMessage);
+    const timer = window.setInterval(listen, 900);
+    return () => { clearInterval(timer); window.removeEventListener("message", onMessage); };
+  }, [enabled, failed]);
+  return <section className="film" aria-label="VEMONTES">
+    {enabled && !failed && <iframe ref={frame} id="home-film" title="VEMONTES brand film" allow="autoplay; encrypted-media; fullscreen" referrerPolicy="strict-origin-when-cross-origin"
+      src={host + "/embed/" + film + "?autoplay=1&mute=1&playsinline=1&loop=1&playlist=" + film + "&controls=0&enablejsapi=1&origin=" + encodeURIComponent(location.origin)} />}
+    <div className="film-tools">
+      {!failed && <button type="button" aria-label={labels[playing ? 6 : 7]} onClick={() => {
+        if (!enabled) setEnabled(true); else send({ event: "command", func: playing ? "pauseVideo" : "playVideo", args: [] });
+      }}>{playing ? <Pause size={16}/> : <Play size={16}/>}</button>}
+      <a href={"https://youtu.be/" + film} target="_blank" rel="noreferrer">YouTube ↗</a>
+    </div>
+  </section>;
+}
 
 export default function Index() {
-  const { language, t } = useLanguage();
+  const { language } = useLanguage();
   const { products } = useCatalog();
-  const bestProducts = products.filter(product => product.badge !== "sold-out").slice(0, 6);
-  const productPages = [bestProducts.slice(0, 3), bestProducts.slice(3, 6)];
-  const ritualSteps = [
-    { slug: "imported-phyderma-17", label: t("prep") },
-    { slug: "imported-vlaga-maks-gidro-krem-40-g-67", label: t("hydrate") },
-    { slug: "imported-glow-pot-mirror-83", label: t("finish") },
-  ];
-  const ritualProducts = ritualSteps.flatMap(({ slug, label }) => {
-    const product = products.find(item => item.slug === slug && item.badge !== "sold-out");
-    return product ? [{ product, label }] : [];
-  });
-  const dailySet = products.find(product => product.category === "sets" && product.badge !== "sold-out");
-  const [activePage, setActivePage] = useState(0);
-  const changePage = (direction: number) => {
-    setActivePage(current => (current + direction + productPages.length) % productPages.length);
+  const labels = copy[language];
+  const rail = useRef<HTMLDivElement>(null);
+  const [paused, setPaused] = useState(() => matchMedia("(prefers-reduced-motion: reduce)").matches);
+  const lastInteraction = useRef(0);
+  const dragging = useRef(false);
+  const moveSelection = (direction: number) => {
+    const element = rail.current;
+    if (!element || element.children.length < 2) return;
+    const step = (element.children[1] as HTMLElement).offsetLeft - (element.children[0] as HTMLElement).offsetLeft;
+    const end = element.scrollWidth - element.clientWidth;
+    const atEnd = element.scrollLeft >= end - 2;
+    const atStart = element.scrollLeft <= 2;
+    const left = direction > 0 && atEnd ? 0 : direction < 0 && atStart ? end : element.scrollLeft + direction * step;
+    element.scrollTo({ left, behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
   };
-
-  return (
-    <>
-      <section className="relative -mt-[108px] h-[92svh] min-h-[680px] max-h-[960px] overflow-hidden bg-primary">
-        <img src={heroBg} alt="Lumière Cosmetics ýüz kremini ulanýan zenan" className="absolute inset-0 h-full w-full object-cover object-center" />
-        <div className="absolute inset-0 bg-hero" />
-        <div className="relative mx-auto flex h-full max-w-[1440px] items-end justify-between gap-10 px-6 pb-16 pt-40 md:px-10 md:pb-20 lg:px-14">
-          <div className="max-w-4xl animate-fade-up text-primary-foreground">
-            <p className="mb-6 text-[10px] font-medium uppercase tracking-[0.3em] text-primary-foreground/75">{t("newCollection")}</p>
-            <h1 className="text-balance font-display text-[68px] leading-[0.82] tracking-[-0.045em] sm:text-[88px] md:text-[112px] lg:text-[132px]">
-              {t("heroTitle").split("\n")[0]}<br /><em className="font-normal">{t("heroTitle").split("\n")[1]}</em>
-            </h1>
-            <p className="mt-8 max-w-md text-sm leading-relaxed text-primary-foreground/80">{t("heroDescription")}</p>
-            <div className="mt-9 flex flex-wrap items-center gap-6">
-              <Link to="/shop" className="inline-flex items-center gap-5 bg-primary-foreground px-7 py-4 text-[10px] font-medium uppercase tracking-[0.18em] text-primary transition-opacity hover:opacity-85">
-                {t("exploreCollection")} <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link to="/shop#beauty-recommender" className="border-b border-primary-foreground/50 pb-1 text-[10px] font-medium uppercase tracking-[0.18em] text-primary-foreground transition-opacity hover:opacity-65">
-                {t("findProduct")}
-              </Link>
-            </div>
-          </div>
-          {dailySet && <Link to={`/product/${dailySet.slug}`} className="group hidden w-72 shrink-0 bg-background/95 p-4 text-foreground backdrop-blur-sm xl:block">
-            <div className="flex items-center gap-4">
-              <img src={dailySet.image} alt={getProductName(dailySet, language)} className="h-20 w-20 object-cover" />
-              <div>
-                <p className="mb-2 text-[9px] uppercase tracking-[0.2em] text-muted-foreground">{t("newSetLabel")}</p>
-                <p className="font-display text-xl leading-tight">{getProductName(dailySet, language)}</p>
-                <p className="mt-2 text-xs">${dailySet.price.toFixed(2)}</p>
-              </div>
-              <ArrowUpRight className="ml-auto h-4 w-4 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
-            </div>
-          </Link>}
-        </div>
-      </section>
-
-      <section className="border-b border-border px-6 md:px-10" aria-label={t("valuesLabel")}>
-        <div className="mx-auto grid max-w-[1400px] md:grid-cols-3">
-          {values.map(({ icon: Icon, title, text }, index) => (
-            <div key={title} className={`flex gap-5 py-8 md:px-8 md:py-10 ${index > 0 ? "border-t border-border md:border-l md:border-t-0" : ""}`}>
-              <Icon className="mt-1 h-5 w-5 shrink-0 text-accent" strokeWidth={1.4} />
-              <div>
-                <h2 className="mb-2 text-[11px] font-medium uppercase tracking-[0.15em]">{t(title)}</h2>
-                <p className="max-w-xs text-xs leading-relaxed text-muted-foreground">{t(text)}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="px-6 py-24 md:px-10 md:py-32" aria-labelledby="best-products-title">
-        <div className="mx-auto max-w-[1400px]">
-          <div className="mb-12 flex flex-col gap-7 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <p className="mb-4 text-[10px] font-medium uppercase tracking-[0.24em] text-accent">{t("lumiereSelection")}</p>
-              <h2 id="best-products-title" className="font-display text-5xl leading-none tracking-[-0.03em] md:text-7xl">{t("bestSelected")}</h2>
-            </div>
-            <div className="flex items-center gap-2">
-              <button type="button" onClick={() => changePage(-1)} className="flex h-12 w-12 items-center justify-center border border-border transition-colors hover:bg-primary hover:text-primary-foreground" aria-label={t("previousProducts")}>
-                <ArrowLeft className="h-4 w-4" />
-              </button>
-              <button type="button" onClick={() => changePage(1)} className="flex h-12 w-12 items-center justify-center border border-border transition-colors hover:bg-primary hover:text-primary-foreground" aria-label={t("nextProducts")}>
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-          <div key={activePage} className="grid animate-fade-up grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-            {productPages[activePage].map((product, index) => <ProductCard key={product.slug} product={product} index={activePage * 3 + index} />)}
-          </div>
-          <div className="mt-12 flex items-center justify-between border-t border-border pt-6">
-            <div className="flex gap-2" aria-label={t("bestSelected")}>
-              {productPages.map((_, index) => (
-                <button key={index} type="button" onClick={() => setActivePage(index)} className={`h-1.5 transition-all ${index === activePage ? "w-10 bg-accent" : "w-5 bg-border"}`} aria-label={t("productPage", { number: index + 1 })} aria-pressed={index === activePage} />
-              ))}
-            </div>
-            <Link to="/shop" className="inline-flex items-center gap-2 text-[10px] font-medium uppercase tracking-[0.18em] transition-opacity hover:opacity-60">{t("viewAll")} <ArrowUpRight className="h-4 w-4" /></Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="grid border-y border-border lg:grid-cols-2">
-        <div className="relative min-h-[480px] overflow-hidden lg:min-h-[700px]">
-          <img src={coreCollection} alt="Lumière deri ideginiň Esasy kolleksiýasy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 hover:scale-[1.02]" loading="lazy" />
-          <span className="absolute left-6 top-6 bg-background px-3 py-2 text-[9px] uppercase tracking-[0.2em] md:left-10 md:top-10">01 — {t("skincare")}</span>
-        </div>
-        <div className="flex items-center bg-secondary px-6 py-16 md:px-14 lg:px-20">
-          <div className="max-w-lg">
-            <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.22em] text-accent">{t("coreCollection")}</p>
-            <h2 className="whitespace-pre-line font-display text-5xl leading-[0.95] tracking-[-0.03em] md:text-7xl">{t("skincareHeading")}</h2>
-            <p className="my-7 text-sm leading-7 text-muted-foreground">{t("skincareText")}</p>
-            <Link to="/collections/core" className="inline-flex items-center gap-5 border border-foreground px-6 py-4 text-[10px] font-medium uppercase tracking-[0.18em] transition-colors hover:bg-primary hover:text-primary-foreground">{t("explore")} <ArrowRight className="h-4 w-4" /></Link>
-          </div>
-        </div>
-      </section>
-
-      <section className="grid border-b border-border lg:grid-cols-2">
-        <div className="flex items-center px-6 py-16 md:px-14 lg:order-2 lg:px-20">
-          <div className="max-w-lg">
-            <p className="mb-5 text-[10px] font-medium uppercase tracking-[0.22em] text-accent">{t("makeupSets")}</p>
-            <h2 className="whitespace-pre-line font-display text-5xl leading-[0.95] tracking-[-0.03em] md:text-7xl">{t("pairsHeading")}</h2>
-            <p className="my-7 text-sm leading-7 text-muted-foreground">{t("pairsText")}</p>
-            <Link to="/collections/sets-and-pairs" className="inline-flex items-center gap-5 border border-foreground px-6 py-4 text-[10px] font-medium uppercase tracking-[0.18em] transition-colors hover:bg-primary hover:text-primary-foreground">{t("chooseSets")} <ArrowRight className="h-4 w-4" /></Link>
-          </div>
-        </div>
-        <div className="relative min-h-[480px] overflow-hidden lg:order-1 lg:min-h-[700px]">
-          <img src={setsAndPairs} alt="Lumière Cosmetics gözellik sowgat toplumy" className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 hover:scale-[1.02]" loading="lazy" />
-          <span className="absolute left-6 top-6 bg-background px-3 py-2 text-[9px] uppercase tracking-[0.2em] md:left-10 md:top-10">{t("giftLabel")}</span>
-        </div>
-      </section>
-
-      <section className="bg-secondary px-6 py-20 md:px-10 md:py-24">
-        <div className="mx-auto flex max-w-[1200px] flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
-          <div className="flex max-w-3xl gap-6">
-            <Sparkles className="mt-2 hidden h-8 w-8 shrink-0 text-accent sm:block" strokeWidth={1.2} />
-            <div>
-              <p className="mb-3 text-[10px] font-medium uppercase tracking-[0.22em] text-accent">{t("aiEyebrow")}</p>
-              <h2 className="whitespace-pre-line font-display text-4xl leading-tight md:text-6xl">{t("aiHeading")}</h2>
-              <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">{t("aiText")}</p>
-            </div>
-          </div>
-          <Link to="/shop#beauty-recommender" className="inline-flex shrink-0 items-center gap-4 bg-primary px-6 py-4 text-[10px] font-medium uppercase tracking-[0.16em] text-primary-foreground transition-opacity hover:opacity-85">{t("getAdvice")} <ArrowUpRight className="h-4 w-4" /></Link>
-        </div>
-      </section>
-
-      <section className="bg-primary px-6 py-24 text-primary-foreground md:px-10 md:py-32" aria-labelledby="ritual-title">
-        <div className="mx-auto max-w-[1400px]">
-          <div className="mb-14 grid gap-6 lg:grid-cols-2 lg:items-end">
-            <div>
-              <p className="mb-4 text-[10px] uppercase tracking-[0.24em] text-primary-foreground/55">{t("ritualEyebrow")}</p>
-              <h2 id="ritual-title" className="whitespace-pre-line font-display text-5xl leading-none md:text-7xl">{t("ritualHeading")}</h2>
-            </div>
-            <p className="max-w-md text-sm leading-7 text-primary-foreground/65 lg:ml-auto">{t("ritualText")}</p>
-          </div>
-          <div className="grid gap-8 md:grid-cols-3">
-            {ritualProducts.map(({ product, label }, index) => (
-              <Link key={product.slug} to={`/product/${product.slug}`} className="group">
-                <div className="aspect-[5/4] overflow-hidden bg-primary-foreground/10">
-                  <img src={product.image} alt={getProductName(product, language)} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" loading="lazy" />
-                </div>
-                <div className="mt-5 flex items-start gap-5 border-t border-primary-foreground/25 pt-5">
-                  <span className="text-[10px] tracking-[0.2em] text-primary-foreground/50">0{index + 1}</span>
-                  <div>
-                    <h3 className="font-display text-2xl leading-tight">{getProductName(product, language)}</h3>
-                    <p className="mt-2 text-[10px] uppercase tracking-[0.15em] text-primary-foreground/55">{label}</p>
-                  </div>
-                  <ArrowUpRight className="ml-auto h-4 w-4 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <NewsletterSignup />
-    </>
-  );
+  useEffect(() => {
+    if (paused) return;
+    const timer = window.setInterval(() => {
+      const element = rail.current;
+      if (!element || document.hidden) return;
+      const bounds = element.getBoundingClientRect();
+      if (bounds.bottom <= 0 || bounds.top >= innerHeight || dragging.current || element.querySelector("a:focus-visible") || Date.now() - lastInteraction.current < 4000) return;
+      moveSelection(1);
+    }, 4000);
+    return () => window.clearInterval(timer);
+  }, [paused]);
+  const find = (ids: number[]) => ids.flatMap(id => products.find(p => p.slug.endsWith("-" + id)) ?? []);
+  const tile = (p: Product) => <Link key={p.slug} to={"/product/" + p.slug} className="home-tile">
+    <img src={p.image} loading="lazy" alt={getProductName(p, language)}/><strong>{getProductName(p, language)}</strong><span>${p.price.toFixed(2)}</span>
+  </Link>;
+  return <div className="vem-home">
+    <Film labels={labels}/>
+    <section id="collections" className="home-wrap scroll-mt-20"><h1>{labels[0]}</h1><div className="home-promos">
+      {brandCollections.map(collection => (
+        <Link to={"/shop?collection=" + collection.key} key={collection.key}>
+          <img src={collection.banner} alt="" loading="lazy"/>
+          <strong>{collection.name}</strong>
+        </Link>
+      ))}
+    </div></section>
+    <section className="home-wrap"><div className="home-heading">
+      <button aria-label={labels[8]} onClick={() => { lastInteraction.current = Date.now(); moveSelection(-1); }}><ChevronLeft/></button>
+      <div><h2>{labels[3]}</h2><p>{labels[4]}</p></div>
+      <button aria-label={labels[9]} onClick={() => { lastInteraction.current = Date.now(); moveSelection(1); }}><ChevronRight/></button>
+      <button aria-label={language === "ru" ? "Автопрокрутка" : language === "en" ? "Auto-scroll" : "Awtomatiki süýşürmek"} aria-pressed={!paused} onClick={() => setPaused(value => !value)}>
+        {paused ? <Play size={17}/> : <Pause size={17}/>}
+      </button>
+    </div><div ref={rail} className="home-rail"
+      onPointerDown={() => { dragging.current = true; lastInteraction.current = Date.now(); }}
+      onPointerUp={() => { dragging.current = false; lastInteraction.current = Date.now(); }}
+      onPointerCancel={() => { dragging.current = false; }}
+      onPointerLeave={() => { dragging.current = false; }}
+      onWheel={() => { lastInteraction.current = Date.now(); }}>
+      {find([116,97,94,61,1,95,83,93]).map(tile)}
+    </div></section>
+    {lines.map(line => <section className="home-line" key={line.name}><img className="line-banner" src={line.photo} alt={line.name} loading="lazy"/><div className="line-detail"><h2>{line.name}</h2><div className="line-products">{find(line.ids).map(tile)}</div><Link to="/shop">{labels[5]}</Link></div></section>)}
+  </div>;
 }

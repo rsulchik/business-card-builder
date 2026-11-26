@@ -49,6 +49,7 @@ export type Database = {
       }
       catalog_products: {
         Row: {
+          product_type: string | null
           brand: string | null
           image_source_url: string | null
           image_kind: string | null
@@ -72,6 +73,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          product_type?: string | null
           brand?: string | null
           image_source_url?: string | null
           image_kind?: string | null
@@ -95,6 +97,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          product_type?: string | null
           brand?: string | null
           image_source_url?: string | null
           image_kind?: string | null

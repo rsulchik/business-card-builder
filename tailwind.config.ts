@@ -61,7 +61,7 @@ export default {
       },
       fontFamily: {
         sans: ["DM Sans", "Arial", "sans-serif"],
-        display: ["Cormorant Garamond", "Georgia", "serif"],
+        display: ["DM Sans", "Arial", "sans-serif"],
       },
       backgroundImage: {
         hero: "var(--gradient-hero)",

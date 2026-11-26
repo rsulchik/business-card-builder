@@ -4,6 +4,7 @@ import { isRemoteCatalogImage } from "@/data/catalogImages";
 import { supabase } from "@/integrations/supabase/client";
 
 type CatalogRow = {
+  product_type?: string | null;
   brand?: string | null;
   image_kind?: string | null;
   slug: string;
@@ -39,6 +40,7 @@ function mapRow(row: CatalogRow): Product {
   return {
     ...(fallback ?? { slug: row.slug, image: "", category: row.category }),
     slug: row.slug,
+    productType: row.product_type ?? undefined,
     brand: row.brand ?? undefined,
     isFamilyPhoto: row.image_kind === "product_family",
     name: row.name_tm,

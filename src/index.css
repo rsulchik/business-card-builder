@@ -4,47 +4,47 @@
 
 @layer base {
   :root {
-    --background: 40 33% 97%;
-    --foreground: 345 25% 14%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 10%;
 
-    --card: 40 33% 98%;
-    --card-foreground: 345 25% 14%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
 
-    --popover: 40 33% 98%;
-    --popover-foreground: 345 25% 14%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
 
-    --primary: 345 38% 20%;
-    --primary-foreground: 40 33% 97%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 28 30% 91%;
-    --secondary-foreground: 345 25% 14%;
+    --secondary: 0 0% 97%;
+    --secondary-foreground: 0 0% 10%;
 
-    --muted: 30 18% 92%;
-    --muted-foreground: 345 8% 42%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 37%;
 
-    --accent: 346 40% 36%;
-    --accent-foreground: 40 33% 97%;
+    --accent: 0 0% 18%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62% 42%;
-    --destructive-foreground: 40 33% 97%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 30 17% 82%;
-    --input: 30 17% 82%;
-    --ring: 346 40% 36%;
+    --border: 0 0% 87%;
+    --input: 0 0% 87%;
+    --ring: 0 0% 18%;
 
     --radius: 0rem;
-    --warm-bg: 30 26% 92%;
-    --gradient-hero: linear-gradient(90deg, hsl(345 30% 10% / 0.72) 0%, hsl(345 25% 14% / 0.24) 52%, hsl(345 25% 14% / 0.04) 100%);
-    --shadow-soft: 0 22px 60px -32px hsl(345 25% 14% / 0.34);
+    --warm-bg: 0 0% 97%;
+    --gradient-hero: linear-gradient(90deg, hsl(345 30% 10% / 0.72) 0%, hsl(0 0% 10% / 0.24) 52%, hsl(0 0% 10% / 0.04) 100%);
+    --shadow-soft: 0 22px 60px -32px hsl(0 0% 10% / 0.34);
 
-    --sidebar-background: 40 33% 97%;
-    --sidebar-foreground: 345 25% 14%;
-    --sidebar-primary: 345 38% 20%;
-    --sidebar-primary-foreground: 40 33% 97%;
-    --sidebar-accent: 28 30% 91%;
-    --sidebar-accent-foreground: 345 25% 14%;
-    --sidebar-border: 30 17% 82%;
-    --sidebar-ring: 346 40% 36%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 0 0% 10%;
+    --sidebar-primary: 0 0% 9%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 97%;
+    --sidebar-accent-foreground: 0 0% 10%;
+    --sidebar-border: 0 0% 87%;
+    --sidebar-ring: 0 0% 18%;
 
     --google-button-background: #FFFFFF;
     --google-button-border: #747775;
@@ -135,3 +135,20 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Shared retail layouts */
+.catalog-shell, .catalog-advisor { width: min(92%, 1440px); margin: 0 auto; }
+.store-crumb { display:flex; justify-content:flex-end; gap:.65rem; padding:1.4rem 0; font-size:.78rem; color:#626262; }
+.store-crumb a:hover { text-decoration:underline; }
+.catalog-shell h1 { text-align:center; font-size:clamp(2rem,4vw,3rem); line-height:1.15; font-weight:500; letter-spacing:-.04em; margin:1.7rem 0 2rem; }
+.catalog-types { display:flex; justify-content:center; flex-wrap:wrap; gap:.35rem .55rem; max-width:1080px; margin:0 auto 2.75rem; }
+.catalog-types button { padding:.48rem .72rem; font-size:.88rem; line-height:1.35; border-bottom:1px solid transparent; }
+.catalog-types button:hover, .catalog-types button[aria-pressed=true] { border-color:currentColor; }
+.catalog-types button[aria-pressed=true] { font-weight:700; }
+.catalog-types small { color:#696969; font-size:.73rem; }
+.catalog-tools { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:.9rem 0; border-block:1px solid #dedede; font-size:.85rem; }
+.catalog-tools select { max-width:52%; border:1px solid #d5d5d5; background:white; padding:.55rem .7rem; font:inherit; }
+.catalog-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:3rem 1.3rem; padding:1.75rem 0 4rem; }
+.catalog-advisor { margin-block:2rem 5rem; }
+@media(max-width:960px){.catalog-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:650px){.catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:1.8rem .85rem}.catalog-shell h1{margin:1rem 0 1.5rem}.catalog-types{gap:.1rem .2rem;margin-bottom:1.4rem}.catalog-types button{padding:.42rem .45rem}.catalog-grid h3{font-size:.91rem}}

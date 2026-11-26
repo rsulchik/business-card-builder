@@ -20,7 +20,7 @@ export default function Cart() {
       <section className="px-6 py-20 md:px-10 md:py-28">
         <div className="mx-auto max-w-[1400px]">
           <p className="mb-5 text-[10px] uppercase tracking-[0.22em] text-accent">{t("selectionLabel")}</p>
-          <h1 className="font-display text-7xl leading-none md:text-9xl">{t("basket")}</h1>
+          <h1 className="font-display text-3xl leading-none md:text-5xl">{t("basket")}</h1>
           <div className="mt-16 flex flex-col items-center border-y border-border px-6 py-20 text-center">
             <ShoppingBag className="mb-6 h-8 w-8 text-muted-foreground" strokeWidth={1.2} />
             <h2 className="font-display text-4xl">{t("emptyCart")}</h2>
@@ -36,7 +36,7 @@ export default function Cart() {
     <section className="px-6 py-16 md:px-10 md:py-24">
       <div className="mx-auto max-w-[1400px]">
         <p className="mb-5 text-[10px] uppercase tracking-[0.22em] text-accent">{t("selectionLabel")}</p>
-        <h1 className="font-display text-7xl leading-none md:text-9xl">{t("basket")}</h1>
+        <h1 className="font-display text-3xl leading-none md:text-5xl">{t("basket")}</h1>
         <div className="mt-14 grid items-start gap-14 lg:grid-cols-[1.4fr_0.6fr]">
           <div className="border-t border-border">
             {items.map(item => {

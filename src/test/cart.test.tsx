@@ -5,7 +5,7 @@ import { CartProvider, useCart } from "@/context/CartContext";
 const STORAGE_KEY = "terra-studios-cart";
 
 const sample = {
-  slug: "radiance-renewal-serum",
+  slug: "imported-axcne-ampoule-kit-1",
   name: "Radiance Renewal Serum",
   price: 50,
   image: "/img.jpg",
@@ -39,7 +39,7 @@ describe("cart persistence", () => {
 
     const stored = JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? "[]");
     expect(stored).toHaveLength(1);
-    expect(stored[0]).toMatchObject({ slug: "radiance-renewal-serum", quantity: 2, price: 50 });
+    expect(stored[0]).toMatchObject({ slug: "imported-axcne-ampoule-kit-1", quantity: 2, price: 50 });
   });
 
   it("restores the cart when the app starts again", () => {
@@ -59,7 +59,7 @@ describe("cart persistence", () => {
 
     expect(screen.getByTestId("count")).toHaveTextContent("2");
     expect(screen.getByTestId("subtotal")).toHaveTextContent("100.00");
-    expect(screen.getByTestId("names")).toHaveTextContent("radiance-renewal-serum");
+    expect(screen.getByTestId("names")).toHaveTextContent("imported-axcne-ampoule-kit-1");
   });
 
   it("starts empty when stored data is not a valid cart", () => {

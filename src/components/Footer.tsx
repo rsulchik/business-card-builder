@@ -1,66 +1,46 @@
-import { ArrowUpRight, Instagram } from "lucide-react";
+import { Mail, Youtube } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "@/i18n";
+import "./Footer.css";
 
-const shopLinks = [
-  { to: "/shop", label: "allProducts" as const },
-  { to: "/shop?category=skincare", label: "skincare" as const },
-  { to: "/shop?category=makeup", label: "makeup" as const },
-  { to: "/shop?category=sets", label: "sets" as const },
-];
-
-const aboutLinks = [
-  { to: "/about", label: "about" as const },
-  { to: "/collections/core", label: "coreCollection" as const },
-  { to: "/collections/sets-and-pairs", label: "sets" as const },
-  { to: "/contact", label: "contact" as const },
-];
+const labels = {
+  ru: { info: "Информация о магазине", brand: "Магазин", catalog: "Каталог", support: "Поддержка", write: "Написать в магазин", advisor: "Помощь с выбором", payment: "Информация об оплате", paymentHelp: "Задать вопрос об оплате", links: "Связь", film: "Видео VEMONTES на YouTube" },
+  en: { info: "Basic Online Store Information", brand: "Store name", catalog: "Catalog", support: "Customer Service", write: "Contact the store", advisor: "Product advice", payment: "Payment Information", paymentHelp: "Ask about payment", links: "Connect", film: "VEMONTES film on YouTube" },
+  tm: { info: "Dükan barada maglumat", brand: "Dükanyň ady", catalog: "Katalog", support: "Müşderi hyzmaty", write: "Dükana ýazmak", advisor: "Önüm saýlamakda kömek", payment: "Töleg barada maglumat", paymentHelp: "Töleg barada sorag bermek", links: "Habarlaşyk", film: "YouTube-da VEMONTES wideosy" },
+};
 
 export default function Footer() {
-  const { t } = useLanguage();
-
+  const { language, t } = useLanguage();
+  const l = labels[language];
   return (
-    <footer className="bg-primary px-6 pb-8 pt-16 text-primary-foreground md:px-10 md:pt-24">
-      <div className="mx-auto max-w-[1400px]">
-        <div className="grid gap-14 border-b border-primary-foreground/20 pb-16 md:grid-cols-2 lg:grid-cols-[1.6fr_0.8fr_0.8fr_1fr]">
-          <div>
-            <Link to="/" className="inline-flex flex-col leading-none">
-              <span className="font-display text-5xl font-medium tracking-[-0.03em]">Lumière</span>
-              <span className="mt-2 text-[9px] uppercase tracking-[0.48em] opacity-70">Cosmetics</span>
-            </Link>
-            <p className="mt-7 max-w-sm font-display text-3xl leading-tight text-primary-foreground/90">
-              {t("footerTagline")}
-            </p>
-          </div>
-          <div>
-            <h2 className="mb-5 text-[10px] font-medium uppercase tracking-[0.22em] text-primary-foreground/60">{t("shop")}</h2>
-            <div className="flex flex-col gap-3">
-              {shopLinks.map(link => (
-                <Link key={link.to} to={link.to} className="w-fit text-sm text-primary-foreground/80 transition-opacity hover:opacity-60">{t(link.label)}</Link>
-              ))}
-            </div>
-          </div>
-          <div>
-            <h2 className="mb-5 text-[10px] font-medium uppercase tracking-[0.22em] text-primary-foreground/60">Lumière</h2>
-            <div className="flex flex-col gap-3">
-              {aboutLinks.map(link => (
-                <Link key={link.to} to={link.to} className="w-fit text-sm text-primary-foreground/80 transition-opacity hover:opacity-60">{t(link.label)}</Link>
-              ))}
-            </div>
-          </div>
-          <div>
-            <h2 className="mb-5 text-[10px] font-medium uppercase tracking-[0.22em] text-primary-foreground/60">{t("footerHelp")}</h2>
-            <p className="mb-5 text-sm leading-relaxed text-primary-foreground/70">{t("footerHelpText")}</p>
-            <Link to="/shop#beauty-recommender" className="inline-flex items-center gap-2 border-b border-primary-foreground/50 pb-1 text-xs uppercase tracking-[0.15em] transition-opacity hover:opacity-60">
-              {t("getAdvice")} <ArrowUpRight className="h-4 w-4" />
-            </Link>
-          </div>
+    <footer className="store-footer">
+      <div className="store-footer-inner">
+        <div className="store-footer-columns">
+          <section>
+            <nav aria-label={l.info}>
+              <Link to="/about">{t("about")}</Link>
+              <Link to="/shop">{t("shop")}</Link>
+              <Link to="/collections/core">{t("collections")}</Link>
+              <Link to="/contact">{t("contact")}</Link>
+            </nav>
+            <h2>{l.info}</h2>
+            <p><b>{l.brand}</b> Lumière Cosmetics</p>
+            <p><b>{l.catalog}</b> <Link to="/shop?category=skincare">{t("skincare")}</Link> · <Link to="/shop?category=makeup">{t("makeup")}</Link> · <Link to="/collections/sets-and-pairs">{t("sets")}</Link></p>
+          </section>
+          <section>
+            <h2>{l.support}</h2>
+            <p><b>{t("contact")}</b><br/><Link to="/contact">{l.write}</Link></p>
+            <p><b>{l.advisor}</b><br/><Link to="/shop#beauty-recommender">{t("getAdvice")}</Link></p>
+          </section>
+          <section>
+            <h2>{l.payment}</h2>
+            <p>{t("checkoutSoon")}</p>
+            <Link to="/contact">{l.paymentHelp}</Link>
+          </section>
         </div>
-        <div className="flex flex-col gap-5 pt-7 text-[10px] uppercase tracking-[0.15em] text-primary-foreground/55 sm:flex-row sm:items-center sm:justify-between">
+        <div className="store-footer-bottom">
           <p>© {new Date().getFullYear()} Lumière Cosmetics. {t("rights")}</p>
-          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="inline-flex w-fit items-center gap-2 transition-opacity hover:opacity-60" aria-label="Instagram">
-            <Instagram className="h-4 w-4" /> Instagram
-          </a>
+          <div><b>{l.links}</b><Link to="/contact" aria-label={l.write} title={l.write}><Mail/></Link><a href="https://youtu.be/HoV4vUBeDN0" target="_blank" rel="noreferrer" aria-label={l.film} title={l.film}><Youtube/></a></div>
         </div>
       </div>
     </footer>

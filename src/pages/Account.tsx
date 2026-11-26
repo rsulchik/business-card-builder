@@ -91,7 +91,7 @@ export default function Account() {
       <div className="mx-auto max-w-[1200px]">
         <p className="text-[10px] font-medium uppercase tracking-[0.24em] text-accent">{t("accountCommunity")}</p>
         <div className="mt-5 flex flex-col justify-between gap-7 border-b border-border pb-10 md:flex-row md:items-end">
-          <div><h1 className="font-display text-7xl leading-[0.9] tracking-[-0.04em] md:text-9xl">{t("accountTitle")}</h1><p className="mt-6 text-sm text-muted-foreground">{user.email}</p></div>
+          <div><h1 className="font-display text-3xl leading-tight tracking-[-0.04em] md:text-5xl">{t("accountTitle")}</h1><p className="mt-6 text-sm text-muted-foreground">{user.email}</p></div>
           <button type="button" onClick={() => void handleSignOut()} className="inline-flex w-fit items-center gap-3 border-b border-foreground pb-1 text-[10px] font-medium uppercase tracking-[0.15em]"><LogOut className="h-4 w-4" /> {t("logout")}</button>
         </div>
 
@@ -139,7 +139,7 @@ export default function Account() {
 
           <aside>
             <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">{t("madeForYou")}</p>
-            <h2 className="mt-4 font-display text-5xl leading-[1.02]">{t("refreshRoutine")}</h2>
+            <h2 className="mt-4 font-display text-3xl leading-[1.02]">{t("refreshRoutine")}</h2>
             <p className="mt-6 text-sm leading-7 text-muted-foreground">{t("accountAdvice")}</p>
             <Link to="/shop#beauty-recommender" className="mt-8 inline-flex items-center gap-3 border-b border-foreground pb-1 text-[10px] uppercase tracking-[0.15em]">{t("getAdvice")} <ArrowRight className="h-4 w-4" /></Link>
             <div className="mt-12 border-t border-border pt-7"><Link to="/cart" className="flex items-center justify-between gap-4 font-display text-3xl">{t("myCart")} <ArrowRight className="h-5 w-5" /></Link></div>

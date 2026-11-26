@@ -52,7 +52,7 @@ export default function Admin() {
   if (!isAdmin) {
     return (
       <section className="flex min-h-[60vh] items-center justify-center px-6 py-20 text-center">
-        <div><ShieldCheck className="mx-auto mb-5 h-10 w-10 text-accent" /><h1 className="font-display text-5xl">Доступ закрыт.</h1><p className="mt-4 text-sm text-muted-foreground">Эта страница доступна только администраторам.</p><Link to="/" className="mt-8 inline-flex items-center gap-3 border-b border-foreground pb-1 text-xs uppercase tracking-[0.15em]">На главную <ArrowRight className="h-4 w-4" /></Link></div>
+        <div><ShieldCheck className="mx-auto mb-5 h-10 w-10 text-accent" /><h1 className="font-display text-3xl">Доступ закрыт.</h1><p className="mt-4 text-sm text-muted-foreground">Эта страница доступна только администраторам.</p><Link to="/" className="mt-8 inline-flex items-center gap-3 border-b border-foreground pb-1 text-xs uppercase tracking-[0.15em]">На главную <ArrowRight className="h-4 w-4" /></Link></div>
       </section>
     );
   }
@@ -81,7 +81,7 @@ export default function Admin() {
     <section className="px-6 py-16 md:px-10 md:py-24">
       <div className="mx-auto max-w-[1400px]">
         <div className="flex flex-col justify-between gap-6 border-b border-border pb-10 md:flex-row md:items-end">
-          <div><p className="text-[10px] uppercase tracking-[0.24em] text-accent">Lumière Admin</p><h1 className="mt-5 font-display text-7xl leading-[0.9] md:text-9xl">Каталог.</h1><p className="mt-5 text-sm text-muted-foreground">Редактирование каталога для {user.email}</p></div>
+          <div><p className="text-[10px] uppercase tracking-[0.24em] text-accent">Lumière Admin</p><h1 className="mt-5 font-display text-3xl leading-tight md:text-5xl">Каталог.</h1><p className="mt-5 text-sm text-muted-foreground">Редактирование каталога для {user.email}</p></div>
           <Link to="/shop" className="inline-flex items-center gap-3 border-b border-foreground pb-1 text-[10px] uppercase tracking-[0.15em]">Открыть магазин <ArrowRight className="h-4 w-4" /></Link>
         </div>
         {catalogError && <p className="mt-8 border-l-2 border-accent pl-4 text-sm leading-6 text-muted-foreground">Каталог пока использует локальный fallback: {catalogError}</p>}

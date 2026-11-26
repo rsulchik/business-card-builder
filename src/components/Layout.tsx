@@ -8,7 +8,7 @@ export default function Layout() {
     <div className="min-h-screen bg-background">
       <ScrollToTop />
       <Header />
-      <main className="min-h-[70vh] pt-[108px]">
+      <main className="min-h-[70vh] pt-[76px]">
         <Outlet />
       </main>
       <Footer />

@@ -13,7 +13,7 @@ const validRequest = {
 const validResponse = {
   summary: "Çygly we tebigy ýagtylyk üçin şu önümleri saýladyk.",
   recommendations: [
-    { slug: "radiance-renewal-serum", reason: "Gialuron kislotasy we ýüpek ýaly dokumasy bar." },
+    { slug: "imported-axcne-ampoule-kit-1", reason: "Gialuron kislotasy we ýüpek ýaly dokumasy bar." },
   ],
 };
 
@@ -40,7 +40,7 @@ describe("beauty recommender validation", () => {
 
   it("rejects more than three recommendations", () => {
     const recommendations = [
-      { slug: "radiance-renewal-serum", reason: "Sebäp" },
+      { slug: "imported-axcne-ampoule-kit-1", reason: "Sebäp" },
       { slug: "velvet-cloud-moisturizer", reason: "Sebäp" },
       { slug: "rose-quartz-facial-oil", reason: "Sebäp" },
       { slug: "silk-veil-lip-tint", reason: "Sebäp" },

@@ -7,6 +7,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import { CartProvider } from "@/context/CartContext";
 import Layout from "@/components/Layout";
 import Index from "./pages/Index";
+import StoreBoard from "./pages/StoreBoard";
 import Shop from "./pages/Shop";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
@@ -39,6 +40,9 @@ const App = () => (
                 <Route element={<Layout />}>
                   <Route path="/" element={<Index />} />
                   <Route path="/shop" element={<Shop />} />
+                  <Route path="/promotion" element={<StoreBoard page="promotion" />} />
+                  <Route path="/reviews" element={<StoreBoard page="reviews" />} />
+                  <Route path="/events" element={<StoreBoard page="events" />} />
                   <Route path="/about" element={<About />} />
                   <Route path="/contact" element={<Contact />} />
                   <Route path="/cart" element={<Cart />} />

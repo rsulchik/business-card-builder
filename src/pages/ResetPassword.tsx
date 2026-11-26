@@ -42,21 +42,21 @@ export default function ResetPassword() {
         {!isRecovery ? (
           <>
             <p className="text-[10px] uppercase tracking-[0.24em] text-accent">{t("forgotEyebrow")}</p>
-            <h1 className="mt-5 font-display text-5xl leading-none">{t("invalidResetLink")}</h1>
+            <h1 className="mt-5 font-display text-3xl leading-none">{t("invalidResetLink")}</h1>
             <p className="mt-6 text-sm leading-7 text-muted-foreground">{t("invalidResetText")}</p>
             <Link to="/forgot-password" className="mt-8 inline-flex items-center gap-3 bg-primary px-7 py-4 text-[10px] uppercase tracking-[0.16em] text-primary-foreground">{t("getNewLink")} <ArrowRight className="h-4 w-4" /></Link>
           </>
         ) : complete ? (
           <>
             <Check className="mb-7 h-8 w-8 text-accent" />
-            <h1 className="font-display text-5xl leading-none">{t("passwordUpdated")}</h1>
+            <h1 className="font-display text-3xl leading-none">{t("passwordUpdated")}</h1>
             <p className="mt-6 text-sm leading-7 text-muted-foreground">{t("passwordUpdatedText")}</p>
             <Link to="/login" className="mt-8 inline-flex items-center gap-3 bg-primary px-7 py-4 text-[10px] uppercase tracking-[0.16em] text-primary-foreground">{t("backToLogin")} <ArrowRight className="h-4 w-4" /></Link>
           </>
         ) : (
           <>
             <p className="text-[10px] uppercase tracking-[0.24em] text-accent">{t("security")}</p>
-            <h1 className="mt-5 font-display text-5xl leading-none md:text-6xl">{t("newPassword")}</h1>
+            <h1 className="mt-5 font-display text-3xl leading-none md:text-5xl">{t("newPassword")}</h1>
             <p className="mt-6 text-sm leading-7 text-muted-foreground">{t("passwordHint")}</p>
             <form onSubmit={handleSubmit} className="mt-9 space-y-6">
               <div><label htmlFor="newPassword" className="mb-2 block text-[10px] uppercase tracking-[0.15em]">{t("newPassword")}</label><input id="newPassword" type="password" autoComplete="new-password" value={password} onChange={event => setPassword(event.target.value)} className={inputClass} /></div>

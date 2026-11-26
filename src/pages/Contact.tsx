@@ -30,7 +30,7 @@ export default function Contact() {
           <p className="mb-6 text-[10px] font-medium uppercase tracking-[0.24em] text-accent">{t("contactEyebrow")}</p>
           <div className="grid gap-16 lg:grid-cols-[0.85fr_1.15fr] lg:gap-24">
             <div>
-              <h1 className="whitespace-pre-line font-display text-7xl leading-[0.85] tracking-[-0.04em] md:text-9xl">{t("contactHeading")}</h1>
+              <h1 className="whitespace-pre-line font-display text-3xl leading-tight tracking-[-0.04em] md:text-5xl">{t("contactHeading")}</h1>
               <p className="mt-8 max-w-md text-sm leading-7 text-muted-foreground">{t("contactText")}</p>
               <div className="mt-12 border-t border-border pt-6">
                 <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">{t("responseTime")}</p>
