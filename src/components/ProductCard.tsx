@@ -11,10 +11,15 @@ export default function ProductCard({ product, index }: { product: Product; inde
       <div className="relative aspect-[4/5] overflow-hidden bg-warm-bg">
         <img
           src={product.image}
-          alt={product.name}
-          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035]"
+          alt={getProductName(product, language)}
+          className="h-full w-full bg-white object-contain transition-transform duration-700 ease-out group-hover:scale-[1.035]"
           loading="lazy"
         />
+        {product.isFamilyPhoto && (
+          <span className="absolute bottom-3 left-3 bg-white/95 px-2 py-1 text-xs text-foreground">
+            {language === "ru" ? "Фото линейки" : language === "en" ? "Product line photo" : "Önüm tapgyrynyň suraty"}
+          </span>
+        )}
         <div className="absolute left-4 top-4 flex items-center gap-2">
           {product.badge === "sale" && <span className="bg-accent px-3 py-1.5 text-[9px] font-medium uppercase tracking-[0.14em] text-accent-foreground">{t("sale")}</span>}
           {product.badge === "sold-out" && <span className="bg-primary px-3 py-1.5 text-[9px] font-medium uppercase tracking-[0.14em] text-primary-foreground">{t("soldOut")}</span>}

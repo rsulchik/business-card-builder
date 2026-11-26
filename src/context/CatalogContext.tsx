@@ -4,6 +4,8 @@ import { isRemoteCatalogImage } from "@/data/catalogImages";
 import { supabase } from "@/integrations/supabase/client";
 
 type CatalogRow = {
+  brand?: string | null;
+  image_kind?: string | null;
   slug: string;
   name_tm: string;
   name_ru: string;
@@ -37,6 +39,8 @@ function mapRow(row: CatalogRow): Product {
   return {
     ...(fallback ?? { slug: row.slug, image: "", category: row.category }),
     slug: row.slug,
+    brand: row.brand ?? undefined,
+    isFamilyPhoto: row.image_kind === "product_family",
     name: row.name_tm,
     nameRu: row.name_ru,
     nameEn: row.name_en,
@@ -78,19 +82,18 @@ function toRow(product: Product): CatalogRow {
 }
 
 export function CatalogProvider({ children }: { children: ReactNode }) {
-  const [products, setProducts] = useState<Product[]>(fallbackProducts);
+  const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
   const reload = async () => {
     setIsLoading(true);
     const { data, error: requestError } = await supabase.from("catalog_products").select("*").order("sort_order");
-    if (requestError || !data || data.length === 0) {
-      setError(requestError?.message ?? "Catalog is not seeded yet.");
-      setProducts(fallbackProducts);
+    if (requestError) {
+      setError(requestError.message);
     } else {
       setError("");
-      setProducts((data as CatalogRow[]).map(mapRow));
+      setProducts(((data ?? []) as CatalogRow[]).map(mapRow));
     }
     setIsLoading(false);
   };

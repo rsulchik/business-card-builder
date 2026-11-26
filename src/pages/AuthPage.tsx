@@ -118,7 +118,7 @@ export default function AuthPage({ mode }: { mode: AuthMode }) {
               <h1 className="mt-5 font-display text-6xl leading-[0.92] tracking-[-0.04em] md:text-7xl">{copy.title}</h1>
               <p className="mt-6 text-sm leading-7 text-muted-foreground">{copy.intro}</p>
 
-              {mode !== "forgot" && (
+              {mode !== "forgot" && import.meta.env.VITE_AUTH_MODE !== "email" && (
                 <div className="mt-9">
                   <SocialSignInButtons returnPath={returnPath} />
                   <div className="my-7 flex items-center gap-4"><span className="h-px flex-1 bg-border" /><span className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">ýa-da e-poçta bilen</span><span className="h-px flex-1 bg-border" /></div>

@@ -52,8 +52,8 @@ export default function Header() {
   return (
     <header className="fixed inset-x-0 top-0 z-50">
       <div className="flex h-8 items-center justify-center bg-primary px-6 text-primary-foreground">
-        <Link to="/product/daily-dew-skin-set" className="text-[10px] font-medium uppercase tracking-[0.2em] transition-opacity hover:opacity-75">
-          {t("newSet")}
+        <Link to="/collections/sets-and-pairs" className="text-[10px] font-medium uppercase tracking-[0.2em] transition-opacity hover:opacity-75">
+          {t("setsCollection")}
         </Link>
       </div>
 

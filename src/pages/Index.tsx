@@ -21,9 +21,16 @@ export default function Index() {
   const { products } = useCatalog();
   const bestProducts = products.filter(product => product.badge !== "sold-out").slice(0, 6);
   const productPages = [bestProducts.slice(0, 3), bestProducts.slice(3, 6)];
-  const ritualProducts = ["radiance-renewal-serum", "velvet-cloud-moisturizer", "silk-veil-lip-tint"]
-    .map(slug => products.find(product => product.slug === slug)!);
-  const dailySet = products.find(product => product.slug === "daily-dew-skin-set") ?? products[0];
+  const ritualSteps = [
+    { slug: "imported-phyderma-17", label: t("prep") },
+    { slug: "imported-vlaga-maks-gidro-krem-40-g-67", label: t("hydrate") },
+    { slug: "imported-glow-pot-mirror-83", label: t("finish") },
+  ];
+  const ritualProducts = ritualSteps.flatMap(({ slug, label }) => {
+    const product = products.find(item => item.slug === slug && item.badge !== "sold-out");
+    return product ? [{ product, label }] : [];
+  });
+  const dailySet = products.find(product => product.category === "sets" && product.badge !== "sold-out");
   const [activePage, setActivePage] = useState(0);
   const changePage = (direction: number) => {
     setActivePage(current => (current + direction + productPages.length) % productPages.length);
@@ -162,7 +169,7 @@ export default function Index() {
             <p className="max-w-md text-sm leading-7 text-primary-foreground/65 lg:ml-auto">{t("ritualText")}</p>
           </div>
           <div className="grid gap-8 md:grid-cols-3">
-            {ritualProducts.map((product, index) => (
+            {ritualProducts.map(({ product, label }, index) => (
               <Link key={product.slug} to={`/product/${product.slug}`} className="group">
                 <div className="aspect-[5/4] overflow-hidden bg-primary-foreground/10">
                   <img src={product.image} alt={getProductName(product, language)} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]" loading="lazy" />
@@ -171,7 +178,7 @@ export default function Index() {
                   <span className="text-[10px] tracking-[0.2em] text-primary-foreground/50">0{index + 1}</span>
                   <div>
                     <h3 className="font-display text-2xl leading-tight">{getProductName(product, language)}</h3>
-                    <p className="mt-2 text-[10px] uppercase tracking-[0.15em] text-primary-foreground/55">{[t("prep"), t("hydrate"), t("finish")][index]}</p>
+                    <p className="mt-2 text-[10px] uppercase tracking-[0.15em] text-primary-foreground/55">{label}</p>
                   </div>
                   <ArrowUpRight className="ml-auto h-4 w-4 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
                 </div>

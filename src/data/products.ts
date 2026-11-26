@@ -13,6 +13,8 @@ import { importedCatalog } from "@/data/catalogImport";
 export type ProductCategory = "skincare" | "makeup" | "sets";
 
 export interface Product {
+  brand?: string;
+  isFamilyPhoto?: boolean;
   slug: string;
   name: string;
   price: number;

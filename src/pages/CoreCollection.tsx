@@ -6,9 +6,9 @@ import { useCatalog } from "@/context/CatalogContext";
 const process = ["selection", "formula", "finishProcess"] as const;
 
 export default function CoreCollection() {
-  const { language, t } = useLanguage();
+  const { t } = useLanguage();
   const { products } = useCatalog();
-  const coreProducts = products.filter(product => ["radiance-renewal-serum", "velvet-cloud-moisturizer", "rose-quartz-facial-oil", "petal-soft-cream-blush"].includes(product.slug));
+  const coreProducts = products.filter(product => product.category === "skincare" && product.badge !== "sold-out").slice(0, 4);
   const processText = {
     selection: t("selectionText"),
     formula: t("formulaText"),
@@ -39,7 +39,7 @@ export default function CoreCollection() {
 
       <section className="px-6 pb-24 md:px-10 md:pb-32">
         <div className="mx-auto max-w-[1400px]">
-          <div className="mb-10 flex items-center justify-between border-t border-border pt-5 text-[10px] uppercase tracking-[0.18em] text-muted-foreground"><span>{t("collectionProducts")}</span><span>04 {language === "ru" ? "продукта" : language === "en" ? "products" : "önüm"}</span></div>
+          <div className="mb-10 flex items-center justify-between border-t border-border pt-5 text-[10px] uppercase tracking-[0.18em] text-muted-foreground"><span>{t("collectionProducts")}</span><span>{coreProducts.length}</span></div>
           <div className="grid grid-cols-1 gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-4">{coreProducts.map((product, index) => <ProductCard key={product.slug} product={product} index={index} />)}</div>
         </div>
       </section>

@@ -49,6 +49,9 @@ export type Database = {
       }
       catalog_products: {
         Row: {
+          brand: string | null
+          image_source_url: string | null
+          image_kind: string | null
           slug: string
           name_tm: string
           name_ru: string
@@ -69,6 +72,9 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          brand?: string | null
+          image_source_url?: string | null
+          image_kind?: string | null
           slug: string
           name_tm: string
           name_ru: string
@@ -89,6 +95,9 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          brand?: string | null
+          image_source_url?: string | null
+          image_kind?: string | null
           slug?: string
           name_tm?: string
           name_ru?: string
@@ -115,7 +124,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      catalog_suggestions: {
+        Args: { skin: string; concern: string; note: string; lang: string }
+        Returns: { summary: string; recommendations: { slug: string; reason: string }[] }
+      }
     }
     Enums: {
       [_ in never]: never

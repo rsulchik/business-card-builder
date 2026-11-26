@@ -14,7 +14,7 @@ const filters: { value: "all" | ProductCategory; label: string }[] = [
 
 export default function Shop() {
   const { language, t } = useLanguage();
-  const { products } = useCatalog();
+  const { products, error, isLoading, reload } = useCatalog();
   const [searchParams, setSearchParams] = useSearchParams();
   const requestedCategory = searchParams.get("category");
   const selectedCategory = filters.some(filter => filter.value === requestedCategory) ? requestedCategory as "all" | ProductCategory : "all";
@@ -61,7 +61,13 @@ export default function Shop() {
             <p className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground">{selectedCategory === "all" ? t("fullSelection") : language === "tm" ? categoryLabels[selectedCategory] : t(selectedCategory)} — {visibleProducts.length} {language === "ru" ? "продуктов" : language === "en" ? "products" : "önüm"}</p>
           </div>
 
-          <div className="grid grid-cols-1 gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+          {error && <p role="alert" className="mb-6">
+            {language === "ru" ? "Не удалось загрузить каталог. " : language === "en" ? "The catalog could not be loaded. " : "Katalog ýüklenmedi. "}
+            <button type="button" className="underline" onClick={() => void reload()}>
+              {language === "ru" ? "Повторить" : language === "en" ? "Try again" : "Gaýtadan synanyş"}
+            </button>
+          </p>}
+          <div aria-busy={isLoading} className="grid grid-cols-1 gap-x-6 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
             {visibleProducts.map((product, index) => <ProductCard key={product.slug} product={product} index={index} />)}
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react";
 import { ArrowRight, Loader2, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { type Product } from "@/data/products";
+import { getProductName, type Product } from "@/data/products";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import { useLanguage } from "@/i18n";
@@ -50,9 +50,11 @@ export default function BeautyRecommender() {
     setError("");
     setResult(null);
 
-    const { data, error: requestError } = await supabase.functions.invoke<RecommendationResponse>("recommend-products", {
-      body: { skinType, concern, note },
-    });
+    const { data, error: requestError } = import.meta.env.VITE_RECOMMENDATION_MODE === "catalog"
+      ? await supabase.rpc("catalog_suggestions", { skin: skinType, concern, note, lang: language })
+      : await supabase.functions.invoke<RecommendationResponse>("recommend-products", {
+          body: { skinType, concern, note },
+        });
 
     if (requestError || !data) {
       setError(t("recommendationError"));
@@ -65,8 +67,8 @@ export default function BeautyRecommender() {
   };
 
   const handleAdd = (product: Product) => {
-    addItem({ slug: product.slug, name: product.name, price: product.price, image: product.image });
-    const name = language === "tm" ? product.name : product.name;
+    const name = getProductName(product, language);
+    addItem({ slug: product.slug, name, price: product.price, image: product.image });
     toast({ title: language === "ru" ? "Добавлено в корзину" : language === "en" ? "Added to cart" : "Sebede goşuldy", description: `${name} — ${t("addToCart")}.` });
   };
 
@@ -111,6 +113,7 @@ export default function BeautyRecommender() {
         </form>
       </div>
 
+      {result && recommendations.length === 0 && <p role="status" className="p-6">{result.summary}</p>}
       {result && recommendations.length > 0 && (
         <div className="border-t border-border bg-background p-6 md:p-10 lg:p-14" aria-live="polite">
           <p className="mb-3 text-[10px] uppercase tracking-[0.2em] text-accent">{t("yourSelection")}</p>
@@ -119,10 +122,10 @@ export default function BeautyRecommender() {
           <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
             {recommendations.map(({ product, reason }, index) => (
               <article key={product.slug} className="flex flex-col border border-border bg-background">
-                <img src={product.image} alt={product.name} className="aspect-square w-full object-cover" />
+                <img src={product.image} alt={getProductName(product, language)} className="aspect-square w-full bg-white object-contain" />
                 <div className="flex flex-1 flex-col p-6">
                   <p className="mb-4 text-[10px] tracking-[0.18em] text-accent">{String(index + 1).padStart(2, "0")}</p>
-                  <h4 className="font-display text-2xl leading-tight text-foreground">{product.name}</h4>
+                  <h4 className="font-display text-2xl leading-tight text-foreground">{getProductName(product, language)}</h4>
                   <p className="mb-5 mt-3 text-xs font-medium text-foreground">${product.price.toFixed(2)}</p>
                   <p className="mb-7 flex-1 text-sm leading-6 text-muted-foreground">{reason}</p>
                   <button type="button" onClick={() => handleAdd(product)} className="w-full border border-primary py-3.5 text-[10px] font-medium uppercase tracking-[0.15em] text-primary transition-colors hover:bg-primary hover:text-primary-foreground">{t("addToCart")}</button>

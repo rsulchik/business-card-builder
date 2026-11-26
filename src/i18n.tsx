@@ -667,7 +667,7 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     t: (key, replacements) => {
       let value: string = language === "tm" ? turkmenMessages[key] ?? String(key) : messages[language][key];
       Object.entries(replacements ?? {}).forEach(([name, replacement]) => {
-        value = value.replaceAll(`{${name}}`, String(replacement));
+        value = value.split(`{${name}}`).join(String(replacement));
       });
       return value;
     },
